@@ -165,7 +165,7 @@ public class AmountActivity extends Activity {
 
       @Override
       public final void onSensorChanged(SensorEvent event) {
-        Log.i(TAG, event + " is detected");
+        //Log.i(TAG, event + " is detected");
         int type = event.sensor.getType();
         // Smoothing the sensor data a bit
         if (type == Sensor.TYPE_MAGNETIC_FIELD) {
@@ -184,10 +184,10 @@ public class AmountActivity extends Activity {
         int pitch = -(int) Math.toDegrees(values[1]);;
 
         // todo something with values
-        Log.i(TAG, azimuth + " is the azimut");
-        Log.i(TAG, pitch + " is the pitch");
-        Log.i(TAG, triggerRotation1 + " is the triggerRotation1");
-        Log.i(TAG, triggerRotation2 + " is the triggerRotation2");
+//        Log.i(TAG, azimuth + " is the azimut");
+//        Log.i(TAG, pitch + " is the pitch");
+//        Log.i(TAG, triggerRotation1 + " is the triggerRotation1");
+//        Log.i(TAG, triggerRotation2 + " is the triggerRotation2");
         if (event.timestamp-lastSensorEvent<samplingInterval) return;
         lastSensorEvent=event.timestamp;
         if (azimuth > 0) {

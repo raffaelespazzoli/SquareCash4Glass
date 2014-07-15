@@ -28,26 +28,34 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
         >
+    
+        <TextView
+            android:id="@+id/TextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Scanned Code: " >
+
+    </TextView>
+    
     <FrameLayout
         android:id="@+id/camera_preview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:foreground="@drawable/cvv_frame"
+        android:foregroundGravity="center"
         />
 
-
-    <RelativeLayout
-        android:id="@+id/innerRelativeLayout"
+    <TextView
+        android:id="@+id/TextView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
-        <Button
-            android:id="@+id/button_capture"
-            android:text="Capture"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:layout_gravity="bottom"
-            />
-    </RelativeLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Center the CVV code in the frame, swipe left and right to zoom, tap to scan the code, double tap to confirm"
+        android:textSize="12dp" >
+
+    </TextView>
+    
 </RelativeLayout>
