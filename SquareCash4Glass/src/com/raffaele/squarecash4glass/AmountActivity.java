@@ -35,6 +35,7 @@ public class AmountActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    InstallationListener.onStart(this);
     setContentView(R.layout.amount_view);
     updateAmount();
     mGestureDetector = createGestureDetector(this);

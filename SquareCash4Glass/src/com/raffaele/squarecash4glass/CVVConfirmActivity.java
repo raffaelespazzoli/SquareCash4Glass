@@ -24,11 +24,18 @@ package com.raffaele.squarecash4glass;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.builder.RecursiveToStringStyle;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -38,9 +45,11 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
+import com.googlecode.tesseract.android.TessBaseAPI;
 
 /**
  * Take a picture directly from inside the app using this fragment.
@@ -54,8 +63,13 @@ import com.google.android.glass.touchpad.GestureDetector;
  * Created by Rex St. John (on behalf of AirPair.com) on 3/4/14.
  */
 public class CVVConfirmActivity extends Activity {
+  
+  private static final String CVVRegExprStr="/^[0-9]{3,4}$/";
+  private static final Pattern CVVPattern=Pattern.compile(CVVRegExprStr);
 
   private static final String TAG = "CVVConfirmActivity";
+
+  private String CVVCode = null;
 
   private GestureDetector mGestureDetector;
 
@@ -83,7 +97,12 @@ public class CVVConfirmActivity extends Activity {
       public boolean onGesture(Gesture gesture) {
         if (gesture == Gesture.TAP) {
           Log.i(TAG, "TAP is detected");
-          // TODO take picture
+          Bitmap bitMap=mPreview.getDrawingCache();
+          String result=processPicture(bitMap);
+          if (result!=null) {
+            CVVCode=result;
+            ((TextView)findViewById(R.id.TextView1)).setText("Scanned Code: "+CVVCode);
+          }
           return true;
         } else if (gesture == Gesture.SWIPE_RIGHT) {
           currentZoomLevel=Math.max(currentZoomLevel+1, 0);
@@ -109,6 +128,23 @@ public class CVVConfirmActivity extends Activity {
     return gestureDetector;
   }
 
+  private String processPicture(Bitmap bitmap) {
+  String lang = "eng";
+  //Make sure this path exist
+  String DATA_PATH = this.getDir(InstallationListener.tesseactDirName, Context.MODE_PRIVATE).getAbsolutePath()+"/";
+  TessBaseAPI baseApi = new TessBaseAPI();
+  baseApi.setDebug(true); 
+  baseApi.init(DATA_PATH, "eng");
+  baseApi.setImage(bitmap);
+  String recognizedText = baseApi.getUTF8Text();
+  Matcher CVVMatcher=CVVPattern.matcher(recognizedText);
+  // we print the first occurrence if it exists
+  if (CVVMatcher.find()){
+    return CVVMatcher.group();
+  }
+  return null;
+  }
+
   /*
    * Send generic motion events to the gesture detector
    */
@@ -118,6 +154,20 @@ public class CVVConfirmActivity extends Activity {
       return mGestureDetector.onMotionEvent(event);
     }
     return false;
+  }
+  
+  public void onResume(){
+    super.onResume();
+    View view = findViewById(R.id.container);
+    // Create our Preview view and set it as the content of our activity.
+    boolean opened = safeCameraOpenInView(view);
+
+    if (opened == false) {
+      Log.d("CameraGuide", "Error, Camera failed to open");
+      return;
+    }
+    maxZoomLevel = mCamera.getParameters().getMaxZoom();
+    currentZoomLevel = mCamera.getParameters().getZoom();
   }
 
   /**
@@ -132,23 +182,13 @@ public class CVVConfirmActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.cvv_confirm_view);
-    View view = findViewById(R.id.container);
-
-    // Create our Preview view and set it as the content of our activity.
-    boolean opened = safeCameraOpenInView(view);
-
-    if (opened == false) {
-      Log.d("CameraGuide", "Error, Camera failed to open");
-      return;
-    }
-    maxZoomLevel = mCamera.getParameters().getMaxZoom();
-    currentZoomLevel = mCamera.getParameters().getZoom();
     mGestureDetector = createGestureDetector(this);
-
     Log.i(TAG, "onCreate completed.");
 
   }
 
+  
+  
   /**
    * Recommended "safe" way to open the camera.
    * 
@@ -166,11 +206,15 @@ public class CVVConfirmActivity extends Activity {
       FrameLayout preview = (FrameLayout) view.findViewById(R.id.camera_preview);
       preview.addView(mPreview);
       mPreview.startCameraPreview();
+      Log.i(TAG, "camera parameters:"+mCamera.getParameters());
+      Log.i(TAG, "camera current size:"+ToStringBuilder.reflectionToString(mCamera.getParameters().getPictureSize()));
+      Log.i(TAG, "camera supported sizes:"+ToStringBuilder.reflectionToString(mCamera.getParameters().getSupportedPictureSizes().toArray(),new RecursiveToStringStyle()));
 
     }
     Log.i(TAG, "safeCameraOpenInView completed.");
     return qOpened;
   }
+  
 
   /**
    * Safe method for getting a camera instance.
@@ -190,13 +234,14 @@ public class CVVConfirmActivity extends Activity {
   @Override
   public void onPause() {
     super.onPause();
+    releaseCameraAndPreview();
     Log.i(TAG, "onPause completed.");
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
-    releaseCameraAndPreview();
+    
     Log.i(TAG, "onDestroy completed.");
   }
 
@@ -404,7 +449,7 @@ public class CVVConfirmActivity extends Activity {
       if (mSupportedPreviewSizes != null) {
         mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, width, height);
       }
-      Log.i(TAG, "onMeasure() completed.");
+      Log.i(TAG, "onMeasure() completed. witdh: "+ width + " height: " + height);
     }
 
     /**
@@ -427,34 +472,34 @@ public class CVVConfirmActivity extends Activity {
         int previewWidth = width;
         int previewHeight = height;
 
-        if (mPreviewSize != null) {
-          Display display = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-          Log.i(TAG, "display:" + display);
-          switch (display.getRotation()) {
-            case Surface.ROTATION_0:
-              previewWidth = mPreviewSize.width;
-              previewHeight = mPreviewSize.height;
-              // mCamera.setDisplayOrientation(90);
-              break;
-            case Surface.ROTATION_90:
-              previewWidth = mPreviewSize.width;
-              previewHeight = mPreviewSize.height;
-              break;
-            case Surface.ROTATION_180:
-              previewWidth = mPreviewSize.height;
-              previewHeight = mPreviewSize.width;
-              break;
-            case Surface.ROTATION_270:
-              previewWidth = mPreviewSize.width;
-              previewHeight = mPreviewSize.height;
-              mCamera.setDisplayOrientation(180);
-              break;
-          }
-        }
+//        if (mPreviewSize != null) {
+//          Display display = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+//          Log.i(TAG, "display:" + display);
+//          switch (display.getRotation()) {
+//            case Surface.ROTATION_0:
+//              previewWidth = mPreviewSize.width;
+//              previewHeight = mPreviewSize.height;
+//              // mCamera.setDisplayOrientation(90);
+//              break;
+//            case Surface.ROTATION_90:
+//              previewWidth = mPreviewSize.width;
+//              previewHeight = mPreviewSize.height;
+//              break;
+//            case Surface.ROTATION_180:
+//              previewWidth = mPreviewSize.height;
+//              previewHeight = mPreviewSize.width;
+//              break;
+//            case Surface.ROTATION_270:
+//              previewWidth = mPreviewSize.width;
+//              previewHeight = mPreviewSize.height;
+//              mCamera.setDisplayOrientation(180);
+//              break;
+//          }
+//        }
 
         final int scaledChildHeight = previewHeight * width / previewWidth;
         mCameraView.layout(0, height - scaledChildHeight, width, height);
-        Log.i(TAG, "onLayout() completed.");
+        Log.i(TAG, "onLayout() completed."+ 0 + " " + (height - scaledChildHeight)+ " " + width + " " + height);
       }
     }
 
@@ -490,7 +535,7 @@ public class CVVConfirmActivity extends Activity {
       if (optimalSize == null) {
         // TODO : Backup in case we don't get a size.
       }
-      Log.i(TAG, "getOptimalPreviewSize() completed.");
+      Log.i(TAG, "getOptimalPreviewSize() completed: "+ToStringBuilder.reflectionToString(optimalSize));      
       return optimalSize;
     }
   }

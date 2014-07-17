@@ -47,7 +47,7 @@
                  via meta-data tag. This allows this activity to receive search intents via the
                  system hooks. In this sample this is only used on older OS versions (pre-Honeycomb)
                  via the activity search dialog. See the Search API guide for more information:
-                 http://developer.android.com/guide/topics/search/search-dialog.html
+                 http://developer.android.com/guide/topics/search/search-dialog.html
             -->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -61,6 +61,8 @@
             android:name=".CVVConfirmActivity"
             android:label="@string/title_activity_cvvconfirm" >
         </activity>
+
+
     </application>
 
 </manifest>
