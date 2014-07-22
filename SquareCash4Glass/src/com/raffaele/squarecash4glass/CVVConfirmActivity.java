@@ -22,6 +22,7 @@
 
 package com.raffaele.squarecash4glass;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -33,7 +34,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.ShutterCallback;
+import android.media.AudioManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -47,6 +53,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.googlecode.tesseract.android.TessBaseAPI;
@@ -63,9 +70,9 @@ import com.googlecode.tesseract.android.TessBaseAPI;
  * Created by Rex St. John (on behalf of AirPair.com) on 3/4/14.
  */
 public class CVVConfirmActivity extends Activity {
-  
-  private static final String CVVRegExprStr="/^[0-9]{3,4}$/";
-  private static final Pattern CVVPattern=Pattern.compile(CVVRegExprStr);
+
+  private static final String CVVRegExprStr = "/^[0-9]{3,4}$/";
+  private static final Pattern CVVPattern = Pattern.compile(CVVRegExprStr);
 
   private static final String TAG = "CVVConfirmActivity";
 
@@ -83,6 +90,7 @@ public class CVVConfirmActivity extends Activity {
 
   protected int currentZoomLevel;
 
+
   /**
    * Default empty constructor.
    */
@@ -97,53 +105,91 @@ public class CVVConfirmActivity extends Activity {
       public boolean onGesture(Gesture gesture) {
         if (gesture == Gesture.TAP) {
           Log.i(TAG, "TAP is detected");
-          Bitmap bitMap=mPreview.getDrawingCache();
-          String result=processPicture(bitMap);
-          if (result!=null) {
-            CVVCode=result;
-            ((TextView)findViewById(R.id.TextView1)).setText("Scanned Code: "+CVVCode);
+          if (mCamera != null) {
+            mCamera.takePicture(mShutterCallback, null, mPictureCallback);
           }
           return true;
         } else if (gesture == Gesture.SWIPE_RIGHT) {
-          currentZoomLevel=Math.max(currentZoomLevel+1, 0);
+          currentZoomLevel = Math.max(currentZoomLevel + 1, 0);
           updateCameraZoom();
           return true;
         } else if (gesture == Gesture.SWIPE_LEFT) {
-          currentZoomLevel=Math.max(currentZoomLevel-1, 0);
+          currentZoomLevel = Math.max(currentZoomLevel - 1, 0);
           updateCameraZoom();
           return true;
         }
         if (gesture == Gesture.TWO_SWIPE_RIGHT) {
-          currentZoomLevel=Math.min(currentZoomLevel+10, maxZoomLevel);
+          currentZoomLevel = Math.min(currentZoomLevel + 10, maxZoomLevel);
           updateCameraZoom();
           return true;
-        }if (gesture == Gesture.TWO_SWIPE_LEFT) {
-          currentZoomLevel=Math.max(currentZoomLevel-10, 0);
+        }
+        if (gesture == Gesture.TWO_SWIPE_LEFT) {
+          currentZoomLevel = Math.max(currentZoomLevel - 10, 0);
           updateCameraZoom();
           return true;
-        }        
+        }
         return false;
       }
     });
     return gestureDetector;
   }
+  
+  class ProcessPictureTask extends AsyncTask<byte[],Void,String> {
+    @Override
+    protected String doInBackground(byte[]... bytes) {
+      if (bytes.length!=1) return null;
+      byte[] data=bytes[0];
+      Bitmap bitmap=BitmapFactory.decodeByteArray(data, 0, data.length);   
+      String lang = "eng";
+      // Make sure this path exist
+      File dataPathDir = new File(getFilesDir(), InstallationListener.tesseactDirName);
+      // String DATA_PATH = this.getDir(dataPathDir.getAbsolutePath(),
+      // Context.MODE_PRIVATE).getAbsolutePath()+"/";
+      TessBaseAPI baseApi = new TessBaseAPI();
+      baseApi.setDebug(true);
+      baseApi.init(dataPathDir.getAbsolutePath(), lang);
+      baseApi.setImage(bitmap);
+      String recognizedText = baseApi.getUTF8Text();
+      Log.i(TAG, "recognizedText: " + recognizedText);
+      Matcher CVVMatcher = CVVPattern.matcher(recognizedText);
+      // we print the first occurrence if it exists
+      String result=null;
+      if (CVVMatcher.find()) {
+        result=CVVMatcher.group();
+      }
+      Log.i(TAG, "processPicture() completed, result: "+result);
+      return result;
+    }
+    protected void onPostExecute(String result){
+      if (result!=null) {
+        CVVCode=result;
+        ((TextView)findViewById(R.id.TextView1)).setText("Scanned Code: "+CVVCode);
+      }
+    }
 
-  private String processPicture(Bitmap bitmap) {
-  String lang = "eng";
-  //Make sure this path exist
-  String DATA_PATH = this.getDir(InstallationListener.tesseactDirName, Context.MODE_PRIVATE).getAbsolutePath()+"/";
-  TessBaseAPI baseApi = new TessBaseAPI();
-  baseApi.setDebug(true); 
-  baseApi.init(DATA_PATH, "eng");
-  baseApi.setImage(bitmap);
-  String recognizedText = baseApi.getUTF8Text();
-  Matcher CVVMatcher=CVVPattern.matcher(recognizedText);
-  // we print the first occurrence if it exists
-  if (CVVMatcher.find()){
-    return CVVMatcher.group();
   }
-  return null;
-  }
+
+//  private String processPicture(Bitmap bitmap) {
+//    String lang = "eng";
+//    // Make sure this path exist
+//    File dataPathDir = new File(getFilesDir(), InstallationListener.tesseactDirName);
+//    // String DATA_PATH = this.getDir(dataPathDir.getAbsolutePath(),
+//    // Context.MODE_PRIVATE).getAbsolutePath()+"/";
+//    TessBaseAPI baseApi = new TessBaseAPI();
+//    baseApi.setDebug(true);
+//    baseApi.init(dataPathDir.getAbsolutePath(), lang);
+//    baseApi.setImage(bitmap);
+//    String recognizedText = baseApi.getUTF8Text();
+//    Log.i(TAG, "recognizedText: " + recognizedText);
+//    Matcher CVVMatcher = CVVPattern.matcher(recognizedText);
+//    // we print the first occurrence if it exists
+//    String result=null;
+//    if (CVVMatcher.find()) {
+//      result=CVVMatcher.group();
+//    }
+//    Log.i(TAG, "processPicture() completed, result: "+result);
+//    return result;
+//  }
 
   /*
    * Send generic motion events to the gesture detector
@@ -155,8 +201,8 @@ public class CVVConfirmActivity extends Activity {
     }
     return false;
   }
-  
-  public void onResume(){
+
+  public void onResume() {
     super.onResume();
     View view = findViewById(R.id.container);
     // Create our Preview view and set it as the content of our activity.
@@ -168,6 +214,7 @@ public class CVVConfirmActivity extends Activity {
     }
     maxZoomLevel = mCamera.getParameters().getMaxZoom();
     currentZoomLevel = mCamera.getParameters().getZoom();
+
   }
 
   /**
@@ -187,8 +234,6 @@ public class CVVConfirmActivity extends Activity {
 
   }
 
-  
-  
   /**
    * Recommended "safe" way to open the camera.
    * 
@@ -206,15 +251,14 @@ public class CVVConfirmActivity extends Activity {
       FrameLayout preview = (FrameLayout) view.findViewById(R.id.camera_preview);
       preview.addView(mPreview);
       mPreview.startCameraPreview();
-      Log.i(TAG, "camera parameters:"+mCamera.getParameters());
-      Log.i(TAG, "camera current size:"+ToStringBuilder.reflectionToString(mCamera.getParameters().getPictureSize()));
-      Log.i(TAG, "camera supported sizes:"+ToStringBuilder.reflectionToString(mCamera.getParameters().getSupportedPictureSizes().toArray(),new RecursiveToStringStyle()));
+      Log.i(TAG, "camera parameters:" + mCamera.getParameters());
+      Log.i(TAG, "camera current size:" + ToStringBuilder.reflectionToString(mCamera.getParameters().getPictureSize()));
+      Log.i(TAG, "camera supported sizes:" + ToStringBuilder.reflectionToString(mCamera.getParameters().getSupportedPictureSizes().toArray(), new RecursiveToStringStyle()));
 
     }
     Log.i(TAG, "safeCameraOpenInView completed.");
     return qOpened;
   }
-  
 
   /**
    * Safe method for getting a camera instance.
@@ -241,7 +285,7 @@ public class CVVConfirmActivity extends Activity {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    
+
     Log.i(TAG, "onDestroy completed.");
   }
 
@@ -265,11 +309,11 @@ public class CVVConfirmActivity extends Activity {
    * @param parameters
    */
   private void updateCameraZoom() {
-    Log.i(TAG, "currentZoomLevel"+ currentZoomLevel);
-    Log.i(TAG, "maxZoomLevel"+ maxZoomLevel);
+    Log.i(TAG, "currentZoomLevel" + currentZoomLevel);
+    Log.i(TAG, "maxZoomLevel" + maxZoomLevel);
     Camera.Parameters parameters = mCamera.getParameters();
-    Log.i(TAG, "zoomSupported"+ parameters.isZoomSupported());
-    Log.i(TAG, "smoothZoomSupported"+ parameters.isSmoothZoomSupported());
+    Log.i(TAG, "zoomSupported" + parameters.isZoomSupported());
+    Log.i(TAG, "smoothZoomSupported" + parameters.isSmoothZoomSupported());
     if (parameters.isZoomSupported()) {
       if (parameters.isSmoothZoomSupported()) {
         mCamera.startSmoothZoom(currentZoomLevel);
@@ -449,7 +493,7 @@ public class CVVConfirmActivity extends Activity {
       if (mSupportedPreviewSizes != null) {
         mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, width, height);
       }
-      Log.i(TAG, "onMeasure() completed. witdh: "+ width + " height: " + height);
+      Log.i(TAG, "onMeasure() completed. witdh: " + width + " height: " + height);
     }
 
     /**
@@ -472,34 +516,35 @@ public class CVVConfirmActivity extends Activity {
         int previewWidth = width;
         int previewHeight = height;
 
-//        if (mPreviewSize != null) {
-//          Display display = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-//          Log.i(TAG, "display:" + display);
-//          switch (display.getRotation()) {
-//            case Surface.ROTATION_0:
-//              previewWidth = mPreviewSize.width;
-//              previewHeight = mPreviewSize.height;
-//              // mCamera.setDisplayOrientation(90);
-//              break;
-//            case Surface.ROTATION_90:
-//              previewWidth = mPreviewSize.width;
-//              previewHeight = mPreviewSize.height;
-//              break;
-//            case Surface.ROTATION_180:
-//              previewWidth = mPreviewSize.height;
-//              previewHeight = mPreviewSize.width;
-//              break;
-//            case Surface.ROTATION_270:
-//              previewWidth = mPreviewSize.width;
-//              previewHeight = mPreviewSize.height;
-//              mCamera.setDisplayOrientation(180);
-//              break;
-//          }
-//        }
+        // if (mPreviewSize != null) {
+        // Display display = ((WindowManager)
+        // mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        // Log.i(TAG, "display:" + display);
+        // switch (display.getRotation()) {
+        // case Surface.ROTATION_0:
+        // previewWidth = mPreviewSize.width;
+        // previewHeight = mPreviewSize.height;
+        // // mCamera.setDisplayOrientation(90);
+        // break;
+        // case Surface.ROTATION_90:
+        // previewWidth = mPreviewSize.width;
+        // previewHeight = mPreviewSize.height;
+        // break;
+        // case Surface.ROTATION_180:
+        // previewWidth = mPreviewSize.height;
+        // previewHeight = mPreviewSize.width;
+        // break;
+        // case Surface.ROTATION_270:
+        // previewWidth = mPreviewSize.width;
+        // previewHeight = mPreviewSize.height;
+        // mCamera.setDisplayOrientation(180);
+        // break;
+        // }
+        // }
 
         final int scaledChildHeight = previewHeight * width / previewWidth;
         mCameraView.layout(0, height - scaledChildHeight, width, height);
-        Log.i(TAG, "onLayout() completed."+ 0 + " " + (height - scaledChildHeight)+ " " + width + " " + height);
+        Log.i(TAG, "onLayout() completed." + 0 + " " + (height - scaledChildHeight) + " " + width + " " + height);
       }
     }
 
@@ -535,67 +580,35 @@ public class CVVConfirmActivity extends Activity {
       if (optimalSize == null) {
         // TODO : Backup in case we don't get a size.
       }
-      Log.i(TAG, "getOptimalPreviewSize() completed: "+ToStringBuilder.reflectionToString(optimalSize));      
+      Log.i(TAG, "getOptimalPreviewSize() completed: " + ToStringBuilder.reflectionToString(optimalSize));
       return optimalSize;
     }
   }
+  
+  private final ShutterCallback mShutterCallback=new ShutterCallback(){
+
+    @Override
+    public void onShutter() {
+      // TODO Auto-generated method stub
+      AudioManager audio = (AudioManager) CVVConfirmActivity.this.getSystemService(Context.AUDIO_SERVICE);
+      audio.playSoundEffect(Sounds.TAP);
+      Log.i(TAG, "onPictureTaken() completed.");
+    }
+    
+  };
 
   /**
    * Picture Callback for handling a picture capture and saving it out to a
    * file.
    */
-  private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
+  private final PictureCallback mPictureCallback = new PictureCallback() {
 
     @Override
-    public void onPictureTaken(byte[] data, Camera camera) {
-
+    public void onPictureTaken(byte[] data, Camera camera) {    
+      new ProcessPictureTask().execute(data);
+      mCamera.startPreview();
       Log.i(TAG, "onPictureTaken() completed.");
-      // File pictureFile = getOutputMediaFile();
-      // if (pictureFile == null){
-      // Toast.makeText(CVVConfirmActivity.this, "Image retrieval failed.",
-      // Toast.LENGTH_SHORT)
-      // .show();
-      // return;
-      // }
-      //
-      // try {
-      // FileOutputStream fos = new FileOutputStream(pictureFile);
-      // fos.write(data);
-      // fos.close();
-      //
-      // // Restart the camera preview.
-      // safeCameraOpenInView(mCameraView);
-      // } catch (FileNotFoundException e) {
-      // e.printStackTrace();
-      // } catch (IOException e) {
-      // e.printStackTrace();
-      // }
-    }
+    }  
   };
 
-  /**
-   * Used to return the camera File output.
-   * 
-   * @return
-   */
-  /*
-   * private File getOutputMediaFile(){
-   * 
-   * File mediaStorageDir = new
-   * File(Environment.getExternalStoragePublicDirectory(
-   * Environment.DIRECTORY_PICTURES), "UltimateCameraGuideApp");
-   * 
-   * if (! mediaStorageDir.exists()){ if (! mediaStorageDir.mkdirs()){
-   * Log.d("Camera Guide", "Required media storage does not exist"); return
-   * null; } }
-   * 
-   * // Create a media file name String timeStamp = new
-   * SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()); File mediaFile;
-   * mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+
-   * timeStamp + ".jpg");
-   * 
-   * DialogHelper.showDialog( "Success!","Your picture has been saved!",this);
-   * 
-   * return mediaFile; }
-   */
 }

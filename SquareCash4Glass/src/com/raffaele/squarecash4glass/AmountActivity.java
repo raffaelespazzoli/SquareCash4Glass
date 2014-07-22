@@ -14,8 +14,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-import com.google.android.glass.eye.EyeGesture;
-import com.google.android.glass.eye.EyeGestureManager;
+//import com.google.android.glass.eye.EyeGesture;
+//import com.google.android.glass.eye.EyeGestureManager;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 
@@ -27,8 +27,8 @@ public class AmountActivity extends Activity {
   private int mAmount = 0;
   private GestureDetector mGestureDetector;
   private NumberFormat mCurrencyFormatter = NumberFormat.getCurrencyInstance();
-  private EyeGestureManager mEyeGestureManager;
-  private EyeGestureManager.Listener mEyeGestureListener;
+//  private EyeGestureManager mEyeGestureManager;
+//  private EyeGestureManager.Listener mEyeGestureListener;
   private SensorManager mSensorManager;
   private SensorEventListener mSensorEventListener;
 
@@ -39,8 +39,8 @@ public class AmountActivity extends Activity {
     setContentView(R.layout.amount_view);
     updateAmount();
     mGestureDetector = createGestureDetector(this);
-    mEyeGestureManager = EyeGestureManager.from(this);
-    mEyeGestureListener = createEyeGestureListener();
+//    mEyeGestureManager = EyeGestureManager.from(this);
+//    mEyeGestureListener = createEyeGestureListener();
     mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     mSensorEventListener = createSensorListener();
     Log.i(TAG, "onCreate completed.");
@@ -49,9 +49,9 @@ public class AmountActivity extends Activity {
   @Override
   protected void onStart() {
     super.onStart();
-    mEyeGestureManager.stopDetector(EyeGesture.WINK);
-    mEyeGestureManager.enableDetectorPersistently(EyeGesture.WINK, true);
-    mEyeGestureManager.register(EyeGesture.WINK, mEyeGestureListener);
+//    mEyeGestureManager.stopDetector(EyeGesture.WINK);
+//    mEyeGestureManager.enableDetectorPersistently(EyeGesture.WINK, true);
+//    mEyeGestureManager.register(EyeGesture.WINK, mEyeGestureListener);
     Log.i(TAG, "onStart completed.");
   }
 
@@ -73,8 +73,8 @@ public class AmountActivity extends Activity {
   @Override
   protected void onStop() {
     super.onStop();
-    mEyeGestureManager.unregister(EyeGesture.WINK, mEyeGestureListener);
-    mEyeGestureManager.stopDetector(EyeGesture.WINK);
+//    mEyeGestureManager.unregister(EyeGesture.WINK, mEyeGestureListener);
+//    mEyeGestureManager.stopDetector(EyeGesture.WINK);
     Log.i(TAG, "onStop completed.");
   }
 
@@ -133,20 +133,20 @@ public class AmountActivity extends Activity {
     return false;
   }
 
-  private EyeGestureManager.Listener createEyeGestureListener() {
-    EyeGestureManager.Listener listener = new EyeGestureManager.Listener() {
-      @Override
-      public void onEnableStateChange(EyeGesture eyeGesture, boolean paramBoolean) {
-        Log.i(TAG, eyeGesture + " state changed:" + paramBoolean);
-      }
-
-      @Override
-      public void onDetected(final EyeGesture eyeGesture) {
-        Log.i(TAG, eyeGesture + " is detected");
-      }
-    };
-    return listener;
-  }
+//  private EyeGestureManager.Listener createEyeGestureListener() {
+//    EyeGestureManager.Listener listener = new EyeGestureManager.Listener() {
+//      @Override
+//      public void onEnableStateChange(EyeGesture eyeGesture, boolean paramBoolean) {
+//        Log.i(TAG, eyeGesture + " state changed:" + paramBoolean);
+//      }
+//
+//      @Override
+//      public void onDetected(final EyeGesture eyeGesture) {
+//        Log.i(TAG, eyeGesture + " is detected");
+//      }
+//    };
+//    return listener;
+//  }
 
   private SensorEventListener createSensorListener() {
     SensorEventListener listener = new SensorEventListener() {

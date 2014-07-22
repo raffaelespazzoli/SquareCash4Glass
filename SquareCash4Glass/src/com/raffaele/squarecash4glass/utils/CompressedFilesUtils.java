@@ -38,9 +38,9 @@ public class CompressedFilesUtils {
    * @return The {@link List} of {@link File}s with the untared content.
    * @throws ArchiveException
    */
-  public static List<File> unTar(final InputStream inputFile, final String outputDir) throws FileNotFoundException, IOException, ArchiveException {
+  public static List<File> unTar(final InputStream inputFile, final File outputDir) throws FileNotFoundException, IOException, ArchiveException {
 
-    Log.i(TAG, String.format("Untaring %s to dir %s.", inputFile, outputDir));
+    Log.i(TAG, String.format("Untaring %s to dir %s.", inputFile, outputDir.getAbsolutePath()));
 
     final List<File> untaredFiles = new LinkedList<File>();
     final InputStream is = inputFile;
@@ -49,15 +49,27 @@ public class CompressedFilesUtils {
     while ((entry = (TarArchiveEntry) debInputStream.getNextEntry()) != null) {
       final File outputFile = new File(outputDir, entry.getName());
       if (entry.isDirectory()) {
-        Log.i(TAG, String.format("Attempting to write output directory %s.", outputFile.getAbsolutePath()));
-        if (!outputFile.exists()) {
-          Log.i(TAG, String.format("Attempting to create output directory %s.", outputFile.getAbsolutePath()));
-          if (!outputFile.mkdirs()) {
-            Log.i(TAG, String.format("Couldn't create directory %s.", outputFile.getAbsolutePath()));
-            throw new IllegalStateException();
-          }
-        }
+//        Log.i(TAG, String.format("Attempting to write output directory %s.", outputFile.getAbsolutePath()));
+//        if (!outputFile.exists()) {
+//          Log.i(TAG, String.format("Attempting to create output directory %s.", outputFile.getAbsolutePath()));
+//          if (!outputFile.mkdirs()) {
+//            Log.i(TAG, String.format("Couldn't create directory %s.", outputFile.getAbsolutePath()));
+//            throw new IllegalStateException();
+//          }
+//        }
       } else {
+        if (!outputFile.getParentFile().exists()) {
+          Log.i(TAG, String.format("Attempting to create output directory %s.", outputFile.getParentFile().getAbsolutePath()));
+          if (!outputFile.getParentFile().mkdirs()) {
+            Log.i(TAG, String.format("Couldn't create directory %s.", outputFile.getParentFile().getAbsolutePath()));
+            throw new IllegalStateException();
+          } else {
+            Log.i(TAG, String.format("created directory %s.", outputFile.getParentFile().getAbsolutePath()));
+          }
+        } else {
+          Log.i(TAG, String.format("directory %s. already exists", outputFile.getParentFile().getAbsolutePath()));
+        }
+        
         Log.i(TAG, String.format("Creating output file %s.", outputFile.getAbsolutePath()));
 
         final OutputStream outputFileStream = new FileOutputStream(outputFile);
@@ -70,6 +82,19 @@ public class CompressedFilesUtils {
 
     return untaredFiles;
   }
+
+//  private static void createParentDirectory(File outputFile) {
+//    if (outputFile.getParentFile()!=null){
+//      createParentDirectory(outputFile.getParentFile());
+//    }
+//    if (!outputFile.exists()) {
+//      Log.i(TAG, String.format("Attempting to create output directory %s.", outputFile.getAbsolutePath()));
+//      if (!outputFile.mkdirs()) {
+//        Log.i(TAG, String.format("Couldn't create directory %s.", outputFile.getAbsolutePath()));
+//        throw new IllegalStateException();
+//      }
+//    } 
+//  }
 
   /**
    * Ungzip an input file into an output file.
