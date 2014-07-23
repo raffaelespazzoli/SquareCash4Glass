@@ -219,7 +219,7 @@ public class AmountActivity extends Activity {
 
   private void doLaunchContactPicker() {
     //startActivity(new Intent(this, ContactsListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-    startActivity(new Intent(this, CVVConfirmActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+    startActivity(new Intent(this, ContactsListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
   }
 

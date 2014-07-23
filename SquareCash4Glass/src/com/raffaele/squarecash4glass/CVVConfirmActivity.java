@@ -71,7 +71,7 @@ import com.googlecode.tesseract.android.TessBaseAPI;
  */
 public class CVVConfirmActivity extends Activity {
 
-  private static final String CVVRegExprStr = "/^[0-9]{3,4}$/";
+  private static final String CVVRegExprStr = "^[0-9]{3,4}$";
   private static final Pattern CVVPattern = Pattern.compile(CVVRegExprStr);
 
   private static final String TAG = "CVVConfirmActivity";
@@ -157,7 +157,7 @@ public class CVVConfirmActivity extends Activity {
       if (CVVMatcher.find()) {
         result=CVVMatcher.group();
       }
-      Log.i(TAG, "processPicture() completed, result: "+result);
+      Log.i(TAG, "ProcessPictureTask.doInBackground() completed, result: "+result);
       return result;
     }
     protected void onPostExecute(String result){
@@ -460,7 +460,7 @@ public class CVVConfirmActivity extends Activity {
         Camera.Parameters parameters = mCamera.getParameters();
 
         // Set the auto-focus mode to "continuous"
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_MACRO);
 
         // Preview size must exist.
         if (mPreviewSize != null) {
@@ -473,6 +473,7 @@ public class CVVConfirmActivity extends Activity {
       } catch (Exception e) {
         e.printStackTrace();
       }
+      Log.i(TAG, "surfaceChanged() camera focus more: "+mCamera.getParameters().getFocusMode());
       Log.i(TAG, "surfaceChanged() completed.");
     }
 
@@ -592,7 +593,7 @@ public class CVVConfirmActivity extends Activity {
       // TODO Auto-generated method stub
       AudioManager audio = (AudioManager) CVVConfirmActivity.this.getSystemService(Context.AUDIO_SERVICE);
       audio.playSoundEffect(Sounds.TAP);
-      Log.i(TAG, "onPictureTaken() completed.");
+      Log.i(TAG, "onShutter() completed.");
     }
     
   };
