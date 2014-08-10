@@ -61,24 +61,24 @@ public class ContactsListActivity extends FragmentActivity implements
         // will only happen on pre-HC OS versions as from HC onward search is carried out using
         // an ActionBar SearchView which carries out the search in-line without loading a new
         // Activity.
-        if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
-
-            // Fetch query from intent and notify the fragment that it should display search
-            // results instead of all contacts.
-            String searchQuery = getIntent().getStringExtra(SearchManager.QUERY);
-            ContactsListFragment mContactsListFragment = (ContactsListFragment)
-                    getSupportFragmentManager().findFragmentById(R.id.contact_list);
-
-            // This flag notes that the Activity is doing a search, and so the result will be
-            // search results rather than all contacts. This prevents the Activity and Fragment
-            // from trying to a search on search results.
-            isSearchResultView = true;
-            mContactsListFragment.setSearchQuery(searchQuery);
-
-            // Set special title for search results
-            String title = getString(R.string.contacts_list_search_results_title, searchQuery);
-            setTitle(title);
-        }
+//        if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
+//
+//            // Fetch query from intent and notify the fragment that it should display search
+//            // results instead of all contacts.
+//            String searchQuery = getIntent().getStringExtra(SearchManager.QUERY);
+//            ContactsListFragment mContactsListFragment = (ContactsListFragment)
+//                    getSupportFragmentManager().findFragmentById(R.id.contact_list);
+//
+//            // This flag notes that the Activity is doing a search, and so the result will be
+//            // search results rather than all contacts. This prevents the Activity and Fragment
+//            // from trying to a search on search results.
+//            isSearchResultView = true;
+//            mContactsListFragment.setSearchQuery(searchQuery);
+//
+//            // Set special title for search results
+//            String title = getString(R.string.contacts_list_search_results_title, searchQuery);
+//            setTitle(title);
+//        }
 
 //        if (isTwoPaneLayout) {
 //            // If two pane layout, locate the contact detail fragment
