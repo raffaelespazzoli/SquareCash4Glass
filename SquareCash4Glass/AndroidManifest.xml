@@ -8,7 +8,8 @@
         android:minSdkVersion="19"
         android:targetSdkVersion="20" />
 
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -38,6 +39,12 @@
             android:noHistory="true" >
         </activity>
         <activity
+            android:name=".GoogleContactsActivity"
+            android:immersive="true"
+            android:label="@string/title_contact_amount"
+            android:noHistory="true" >
+        </activity>
+        <activity
             android:name=".ContactsListActivity"
             android:immersive="true"
             android:label="@string/activity_contacts_list"
@@ -45,7 +52,7 @@
             android:windowSoftInputMode="adjustResize" >
 
             <!--
-                 Add intent-filter for search intent action and specify searchable configuration
+                      Add intent-filter for search intent action and specify searchable configuration
                  via meta-data tag. This allows this activity to receive search intents via the
                  system hooks. In this sample this is only used on older OS versions (pre-Honeycomb)
                  via the activity search dialog. See the Search API guide for more information:
@@ -53,11 +60,9 @@
             -->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
-                         
-                <action android:name="android.intent.action.MAIN" />
+<!--                 <action android:name="android.intent.action.MAIN" /> -->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-           
+<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
 
             <meta-data

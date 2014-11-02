@@ -26,6 +26,34 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>1.18.0-rc</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>xpp3</artifactId>
+					<groupId>xpp3</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>junit</artifactId>
+					<groupId>junit</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>android</artifactId>
+					<groupId>com.google.android</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client-android</artifactId>
+			<version>1.18.0-rc</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.gdata</groupId>
 			<artifactId>core</artifactId>
 			<version>1.47.1</version>
@@ -35,20 +63,8 @@
 					<groupId>org.mortbay.jetty</groupId>
 				</exclusion>
 				<exclusion>
-					<artifactId>jsr305</artifactId>
-					<groupId>com.google.code.findbugs</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>activation</artifactId>
-					<groupId>javax.activation</groupId>
-				</exclusion>
-				<exclusion>
 					<artifactId>mail</artifactId>
 					<groupId>javax.mail</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>xpp3</artifactId>
-					<groupId>xpp3</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
