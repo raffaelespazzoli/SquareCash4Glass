@@ -12,14 +12,15 @@
 <!-- 		<module>SquareCash4Glass-module</module> -->
 <!-- 		<module>SquareCash4Glass-common</module> -->
 		<module>SquareCash4Glass</module>
+		<module>SquareCash4Glass-common</module>
 	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<appengine.plugin.version>1.9.12</appengine.plugin.version>
-		<appengine.sdk.version>1.9.12</appengine.sdk.version>
+		<appengine.plugin.version>1.9.15</appengine.plugin.version>
+		<appengine.sdk.version>1.9.15</appengine.sdk.version>
 		<google.api.client>1.18.0-rc</google.api.client>
-<!-- 		<jersey.version>2.5.1</jersey.version> -->
+ 		<jersey.version>2.13</jersey.version>
 	</properties>
 
 	<build>

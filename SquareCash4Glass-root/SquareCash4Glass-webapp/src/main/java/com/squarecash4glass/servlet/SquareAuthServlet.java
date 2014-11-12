@@ -18,6 +18,8 @@ package com.squarecash4glass.servlet;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,28 +37,26 @@ import com.squarecash4glass.util.SquareAuthUtil;
  * @author Jenny Murphy - http://google.com/+JennyMurphy
  */
 @SuppressWarnings("serial")
-public class AuthServlet extends HttpServlet {
-	private static final Logger LOG = Logger.getLogger(AuthServlet.class
+public class SquareAuthServlet extends HttpServlet {
+	private static final Logger LOG = Logger.getLogger(SquareAuthServlet.class
 			.getSimpleName());
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res)
-			throws IOException {
-
-
-			LOG.info("in google oauth flow");
-			manageGoogleOauth(req, res);
-
-
+			throws IOException, ServletException {
+			LOG.info("in square oauth flow");
+			manageSquareOauth(req, res);
 	}
+
 
 	/**
 	 * @param req
 	 * @param res
 	 * @throws IOException
+	 * @throws ServletException 
 	 */
-	private void manageGoogleOauth(HttpServletRequest req,
-			HttpServletResponse res) throws IOException {
+	private void manageSquareOauth(HttpServletRequest req,
+			HttpServletResponse res) throws IOException, ServletException {
 		// If something went wrong, log the error message.
 		if (req.getParameter("error") != null) {
 			LOG.severe("Something went wrong during auth: "
@@ -71,27 +71,16 @@ public class AuthServlet extends HttpServlet {
 		if (req.getParameter("code") != null) {
 			LOG.info("Got a code. Attempting to exchange for access token.");
 
-			AuthorizationCodeFlow flow = AuthUtil.newAuthorizationCodeFlow();
+			AuthorizationCodeFlow flow = SquareAuthUtil.newAuthorizationCodeFlow();
 			TokenResponse tokenResponse = flow
 					.newTokenRequest(req.getParameter("code"))
-					.setRedirectUri(WebUtil.buildUrl(req, "/oauth2callback"))
+					.setRedirectUri(WebUtil.buildUrl(req, "/oauth2callbacksquare"))
 					.execute();
 
-			//LOG.info("tokenResponse: " + tokenResponse);
+			LOG.info("tokenResponse: " + tokenResponse);
 
-			GoogleTokenResponse googleTokenResponse = (GoogleTokenResponse) tokenResponse;
-
-			//LOG.info("googleTokenResponse: " + googleTokenResponse);
-
-			// Extract the Google User ID from the ID token in the auth response
-			String userId = ((GoogleTokenResponse) tokenResponse)
-					.parseIdToken().getPayload().getSubject();
-
-			LOG.info("Code exchange worked. User " + userId + " logged in.");
-
-			// Set it into the session
-			AuthUtil.setUserId(req, userId);
-			flow.createAndStoreCredential(tokenResponse, userId);
+			String userid=AuthUtil.getUserId(req);
+			flow.createAndStoreCredential(tokenResponse, userid+"square");
 
 			// Redirect back to index
 			res.sendRedirect(WebUtil.buildUrl(req, "/main"));
@@ -99,16 +88,20 @@ public class AuthServlet extends HttpServlet {
 		}
 
 		// Else, we have a new flow. Initiate a new flow.
-		LOG.info("No auth context found. Kicking off a new auth flow.");
+		LOG.info("No auth context found. Kicking off a new square auth flow.");
 
-		AuthorizationCodeFlow flow = AuthUtil.newAuthorizationCodeFlow();
+//		req.getSession().setAttribute("SquareAuthBean", SquareAuthUtil.getSquareAuthBean());
+//		String nextJSP = "/SquareAuth.jsp";
+//		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+//		dispatcher.forward(req,res);
+		
+		AuthorizationCodeFlow flow = SquareAuthUtil.newAuthorizationCodeFlow();
 		GenericUrl url = flow.newAuthorizationUrl().setRedirectUri(
-				WebUtil.buildUrl(req, "/oauth2callback"));
-		url.set("approval_prompt", "force");
+				WebUtil.buildUrl(req, "/oauth2callbacksquare"));
+		url.set("request_type", "code");
+		url.set("state", "ciao");
 		LOG.info("redirecting to URL: "+url.build());
 		res.sendRedirect(url.build());
 	}
-
-
 
 }

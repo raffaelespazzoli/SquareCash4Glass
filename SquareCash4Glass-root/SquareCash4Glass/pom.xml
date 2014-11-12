@@ -7,7 +7,7 @@
 		<artifactId>SquareCash4Glass-root</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>SquareCash4Glass</artifactId>
 	<packaging>apk</packaging>
 	<name>SquareCash4Glass</name>
@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>com.google.android.gdk</groupId>
 			<artifactId>gdk</artifactId>
-			<version>19_r6</version>
+			<version>19_r11</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -70,6 +70,10 @@
 				<exclusion>
 					<artifactId>mail</artifactId>
 					<groupId>javax.mail</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jetty</artifactId>
+					<groupId>org.mortbay.jetty</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -117,14 +121,21 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.9.0-rc.2</version>
+				<version>4.0.0-rc.2</version>
 				<configuration>
+					<androidManifestFile>${basedir}/AndroidManifest.xml</androidManifestFile>
+					<resourceDirectory>${basedir}/res</resourceDirectory>
+					<assetsDirectory>${basedir}/assets</assetsDirectory>
+					<nativeLibrariesDirectory>${basedir}/libs</nativeLibrariesDirectory>
 					<sdk>
 						<path>C:\Users\SPAZZRA\Documents\java\adt-bundle-windows-x86_64-20131030\adt-bundle-windows-x86_64-20131030\sdk</path>
 						<platform>19</platform>
 					</sdk>
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>false</undeployBeforeDeploy>
+					<!-- <dex> -->
+					<!-- <multiDex>true</multiDex> -->
+					<!-- </dex> -->
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>

@@ -16,10 +16,8 @@
 package com.squarecash4glass.util;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,10 +26,14 @@ import javax.servlet.http.HttpSession;
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.DataStore;
 import com.google.appengine.api.utils.SystemProperty;
@@ -43,77 +45,98 @@ import com.google.appengine.api.utils.SystemProperty;
  * @author Jenny Murphy - http://google.com/+JennyMurphy
  */
 public class AuthUtil {
-  @SuppressWarnings("unused")
-  private static final Logger LOG = Logger.getLogger(AuthUtil.class.getSimpleName());
-  private static AuthUtil authUtil;
-  private static String jsonSecretFileName="client_secret_135749034165-lf5m5cc24pmmfbkfqg0k00e7gmcbociq.apps.googleusercontent.com.json";
-  private static final String CONTACTS_SCOPE = "https://www.googleapis.com/auth/contacts.readonly";
-  private DataStore<StoredCredential> ds;
+	private static final Logger LOG = Logger.getLogger(AuthUtil.class
+			.getSimpleName());
+	// private static AuthUtil authUtil;
+	private static final String jsonSecretFileName = "client_secret_135749034165-lf5m5cc24pmmfbkfqg0k00e7gmcbociq.apps.googleusercontent.com.json";
+	private static final String GLASS_SCOPE = "https://www.googleapis.com/auth/glass.timeline "
+			+ "https://www.googleapis.com/auth/userinfo.profile";
+	private static final String CONTACTS_SCOPE = "https://www.googleapis.com/auth/contacts.readonly";
+	private static final String USER_INFO_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
+	private static DataStore<StoredCredential> ds;
+	private static GoogleClientSecrets secrets;
+	private static JacksonFactory jacksonFactory = new JacksonFactory();
+	private static HttpTransport httpTransport = new NetHttpTransport();
 
-  private AuthUtil() throws IOException {
-    ds = StoredCredential.getDefaultDataStore(AppEngineDataStoreFactory.getDefaultInstance());
-    if (SystemProperty.environment.value().equals(SystemProperty.Environment.Value.Development)) {
-      System.setProperty("http.proxyHost", "proxy.keybank.com");
-      System.setProperty("http.proxyPort", "80");
-      System.setProperty("https.proxyHost", "proxy.keybank.com");
-      System.setProperty("https.proxyPort", "80");
-    }
-  }
+	private static DataStore<StoredCredential> getCredeDataStore()
+			throws IOException {
+		if (ds == null) {
+			ds = StoredCredential.getDefaultDataStore(AppEngineDataStoreFactory
+					.getDefaultInstance());
+		}
+		return ds;
+	}
 
-  public static AuthUtil getAuthUtil() throws IOException {
-    if (authUtil == null) {
-      authUtil = new AuthUtil();
-    }
-    return authUtil;
-  }
+	public static GoogleClientSecrets getSecrets() throws IOException {
+		if (secrets == null) {
+			secrets = GoogleClientSecrets.load(
+					jacksonFactory,
+					new InputStreamReader(AuthUtil.class
+							.getResourceAsStream(jsonSecretFileName)));
+		}
+		return secrets;
 
-  /**
-   * Creates and returns a new {@link AuthorizationCodeFlow} for this app.
-   */
-  public static AuthorizationCodeFlow newAuthorizationCodeFlow() throws IOException {
-    AuthUtil authUtil = AuthUtil.getAuthUtil();
-    return new GoogleAuthorizationCodeFlow.Builder(
-        new NetHttpTransport(), 
-        new JacksonFactory(), 
-        GoogleClientSecrets.load(new com.google.api.client.json.jackson2.JacksonFactory(), new InputStreamReader(AuthUtil.class.getResourceAsStream(jsonSecretFileName))), 
-        Collections.singleton(CONTACTS_SCOPE)).
-        setAccessType("offline")
-        .setCredentialDataStore(authUtil.ds).build();
-  }
+	}
+	
+	public static GoogleCredential getCredentialFromToken(TokenResponse tokenResponse)
+			throws IOException {
+		GoogleCredential credential=new GoogleCredential.Builder().setTransport(httpTransport)
+	      .setJsonFactory(jacksonFactory)
+	      .setClientSecrets(AuthUtil.getSecrets())
+	      .build()
+	      .setFromTokenResponse(tokenResponse);
+		return credential;
+	}	
 
-  /**
-   * Get the current user's ID from the session
-   * 
-   * @return string user id or null if no one is logged in
-   */
-  public static String getUserId(HttpServletRequest request) {
-    HttpSession session = request.getSession();
-    return (String) session.getAttribute("userId");
-  }
+	// public static AuthUtil getAuthUtil() throws IOException {
+	// if (authUtil == null) {
+	// authUtil = new AuthUtil();
+	// }
+	// return authUtil;
+	// }
 
-  public static void setUserId(HttpServletRequest request, String userId) {
-    HttpSession session = request.getSession();
-    session.setAttribute("userId", userId);
-  }
+	/**
+	 * Creates and returns a new {@link AuthorizationCodeFlow} for this app.
+	 */
+	public static AuthorizationCodeFlow newAuthorizationCodeFlow()
+			throws IOException {
+		// AuthUtil authUtil = AuthUtil.getAuthUtil();
 
-  /*
-   * public static void clearUserId(HttpServletRequest request) throws
-   * IOException { // Delete the credential in the credential store String
-   * userId = getUserId(request); store.delete(userId, getCredential(userId));
-   * 
-   * // Remove their ID from the local session
-   * request.getSession().removeAttribute("userId"); }
-   */
+		//LOG.info("google client secrets: " + getSecrets());
 
-  public static Credential getCredential(String userId) throws IOException {
-    if (userId == null) {
-      return null;
-    } else {
-      return AuthUtil.newAuthorizationCodeFlow().loadCredential(userId);
-    }
-  }
+		return new GoogleAuthorizationCodeFlow.Builder(httpTransport,
+				jacksonFactory, getSecrets(),
+				Collections.singleton(CONTACTS_SCOPE + " " + USER_INFO_SCOPE))
+				.setAccessType("offline")
+				.setCredentialDataStore(getCredeDataStore()).build();
+	}
 
-  public static Credential getCredential(HttpServletRequest req) throws IOException {
-    return AuthUtil.newAuthorizationCodeFlow().loadCredential(getUserId(req));
-  }
+	/**
+	 * Get the current user's ID from the session
+	 * 
+	 * @return string user id or null if no one is logged in
+	 */
+	public static String getUserId(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		return (String) session.getAttribute("userId");
+	}
+
+	public static void setUserId(HttpServletRequest request, String userId) {
+		HttpSession session = request.getSession();
+		session.setAttribute("userId", userId);
+	}
+
+	public static Credential getCredential(String userId) throws IOException {
+		if (userId == null) {
+			return null;
+		} else {
+			return AuthUtil.newAuthorizationCodeFlow().loadCredential(userId);
+		}
+	}
+
+	public static Credential getCredential(HttpServletRequest req)
+			throws IOException {
+		return AuthUtil.newAuthorizationCodeFlow().loadCredential(
+				getUserId(req));
+	}
 }

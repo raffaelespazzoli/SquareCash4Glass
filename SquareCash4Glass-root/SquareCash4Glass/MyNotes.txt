@@ -1,2 +1,5 @@
 my notes:
 http://ideanotion.net/google-glass-ocr-eclipse-tutorial/
+
+tesserat fine tuning parameters
+http://www.sk-spell.sk.cx/tesseract-ocr-parameters-in-302-version

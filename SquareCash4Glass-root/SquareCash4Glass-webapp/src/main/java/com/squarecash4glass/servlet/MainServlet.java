@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -28,13 +29,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.mirror.Mirror;
 import com.google.api.services.mirror.model.Account;
 import com.google.api.services.mirror.model.AuthToken;
+import com.google.api.services.plus.Plus;
+import com.google.api.services.plus.model.Person;
 import com.google.common.collect.Lists;
 import com.squarecash4glass.util.AuthUtil;
 
@@ -52,17 +57,17 @@ public class MainServlet extends HttpServlet {
 
   /** Email of the Service Account */
   private static final String SERVICE_ACCOUNT_EMAIL =
-      "289244504858-klab4uv7tak0v0qumb2audlbe6tuce7p@developer.gserviceaccount.com";
+      "135749034165-n37dmkvf02comatsgk51qrm5c25m5j3l@developer.gserviceaccount.com";
 
   /** Path to the Service Account's Private Key file */
   private static final String SERVICE_ACCOUNT_PKCS12_FILE_PATH =
       "WEB-INF/classes/SquareCash4Glass-2d4996020c1a.p12";
 
   /** The account type, usually based on your company or app's package. */
-  private static final String ACCOUNT_TYPE_GOOGLE = "com.suqarecash4glass.google";
+  private static final String ACCOUNT_TYPE_GOOGLE = "com.squarecash4glass.google";
   
   /** The account type, usually based on your company or app's package. */
-  private static final String ACCOUNT_TYPE_SQUARE = "com.suqarecash4glass.square";
+  private static final String ACCOUNT_TYPE_SQUARE = "com.squarecash4glass.square";
 
   /** The Mirror API scopes needed to access the API. */
   private static final List<String> MIRROR_ACCOUNT_SCOPES = Arrays.asList(new String[]{"https://www.googleapis.com/auth/glass.thirdpartyauth"});
@@ -85,8 +90,14 @@ public class MainServlet extends HttpServlet {
         .setServiceAccountPrivateKeyFromP12File(
             new java.io.File(SERVICE_ACCOUNT_PKCS12_FILE_PATH))
         .build();
+    
+    LOG.info("mirror service credentials: "+credential);
+    
     Mirror service = new Mirror.Builder(httpTransport, jsonFactory, null)
-        .setHttpRequestInitializer(credential).build();
+        .setHttpRequestInitializer(credential).setApplicationName("SquareCash4Glass").build();
+    
+    LOG.info("mirror service : "+service);
+    
     return service;
   }
 
@@ -100,18 +111,27 @@ public class MainServlet extends HttpServlet {
    * @param accountName the account name for this particular user
    * @param authTokenType the type of the auth token (chosen by you)
    * @param authToken the auth token
+ * @throws IOException 
    */
   public static void createAccount(Mirror mirror, String userToken, String accountName,
-      String authTokenType, String authToken) {
+      String authTokenType, String authToken) throws IOException {
     try {
       Account account = new Account();
       List<AuthToken> authTokens = Lists.newArrayList(
           new AuthToken().setType(authTokenType).setAuthToken(authToken));
+      
+      LOG.info("auth tokens: "+authToken);
+      
       account.setAuthTokens(authTokens);
-      mirror.accounts().insert(
-          userToken, ACCOUNT_TYPE_GOOGLE, accountName, account).execute();
+      
+      LOG.info("account: "+account);
+      LOG.info("accountName: "+accountName);
+      LOG.info("userToken: "+userToken);
+      
+      mirror.accounts().insert(userToken, ACCOUNT_TYPE_GOOGLE, accountName, account).execute();
     } catch (IOException e) {
-      e.printStackTrace();
+    	LOG.log(Level.SEVERE, "error creating the account on mirror API", e);
+    	throw e;
     }
   }
   
@@ -121,13 +141,12 @@ public class MainServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
-    // 
     // TODO get Token
     
     Credential credential=AuthUtil.getCredential(req);
     
-    String userToken=AuthUtil.getUserId(req); 
-    String accountName="GoogleContacsAccount";
+    String userToken=(String)req.getSession().getAttribute("authToken"); 
+    String accountName=getUserEmail(credential);
     String authTokenType="cp"; 
     String authToken=credential.getAccessToken();
     Mirror mirrorService=null;
@@ -135,22 +154,36 @@ public class MainServlet extends HttpServlet {
     try {
       mirrorService = getMirrorService();
     } catch (GeneralSecurityException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      throw new IOException(e);
+    	LOG.log(Level.SEVERE, "initializing mirror API", e);
+    	throw new IOException(e);
     } catch (URISyntaxException e) {
       // TODO Auto-generated catch block
-      e.printStackTrace();
-      throw new IOException(e);
+    	LOG.log(Level.SEVERE, "initializing mirror API", e);
+    	throw new IOException(e);
     }
     createAccount(mirrorService, userToken, accountName, authTokenType, authToken);
-
-
-
-
   }
 
-  @Override
+  private String getUserEmail(Credential credential) throws IOException {
+      HttpTransport httpTransport = new UrlFetchTransport();
+      JsonFactory jsonFactory = new JacksonFactory();
+      
+  
+      Plus.Builder pBuilder= new Plus.Builder(httpTransport, jsonFactory, credential);
+      Plus plus = pBuilder.setApplicationName("SquareCash4Glass").build();
+    	        
+      
+      Person mePerson = plus.people().get("me").execute();
+      
+      String userId=mePerson.getId();
+      String email=mePerson.getEmails().get(0).getValue();
+    		 
+      LOG.info("userid and email: "+userId+" "+email);
+      
+      return email;
+}
+
+@Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     // TODO Auto-generated method stub
     doPost(req, resp);

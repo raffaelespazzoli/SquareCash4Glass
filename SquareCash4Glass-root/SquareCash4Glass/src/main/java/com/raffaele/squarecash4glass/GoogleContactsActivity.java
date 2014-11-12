@@ -32,7 +32,10 @@ public class GoogleContactsActivity extends Activity {
   private AccountManager mManager;
   private ContactsService mService;
   private URL feedUrl;
-  private final String url = "https://www.google.com/m8/feeds/contacts/default/full";
+  private final String webapp_clientid="135749034165-lf5m5cc24pmmfbkfqg0k00e7gmcbociq.apps.googleusercontent.com";
+  private final String cross_identity_prefix="oauth2:server:client_id:"+webapp_clientid;
+  private final String google_account_scope = "https://www.googleapis.com/auth/contacts.readonly";
+  private final String auth_scope=cross_identity_prefix+":api_scope:"+google_account_scope;
   private final String ACCOUNTS_TYPE = "com.google";
   private final String AUTH_TOKEN_TYPE = "cp";
   private String mToken;
@@ -51,8 +54,8 @@ public class GoogleContactsActivity extends Activity {
     accounts = mManager.getAccountsByType(ACCOUNTS_TYPE);
 
     Log.d(TAG, "account[0]" + accounts[0]);
-
-    mManager.getAuthToken(accounts[0], AUTH_TOKEN_TYPE, null, this, new AccountManagerCallback<Bundle>() {
+    
+   mManager.getAuthToken(accounts[0], AUTH_TOKEN_TYPE, null, this, new AccountManagerCallback<Bundle>() {
       public void run(AccountManagerFuture<Bundle> future) {
         try {
           mToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
@@ -75,7 +78,9 @@ public class GoogleContactsActivity extends Activity {
     }, null);
   }
 
-  public void createService(String token) throws IOException, ServiceException {
+
+
+public void createService(String token) throws IOException, ServiceException {
     mService = new ContactsService("contacts_list");
     mService.setUserToken(token);
     Log.d(TAG, "token set in: "+mService);
@@ -154,5 +159,6 @@ public class GoogleContactsActivity extends Activity {
     textNumberOfContacts.setText(resultFeed.getEntries().size());
     
   }
+  
 
 }

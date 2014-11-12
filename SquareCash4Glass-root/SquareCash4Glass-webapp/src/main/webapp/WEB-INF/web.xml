@@ -16,6 +16,14 @@
 		<filter-name>reauthFilter</filter-name>
 		<filter-class>com.squarecash4glass.servlet.ReauthFilter</filter-class>
 	</filter>
+	<filter>
+		<filter-name>ObjectifyFilter</filter-name>
+		<filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ObjectifyFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	<filter-mapping>
 		<filter-name>reauthFilter</filter-name>
 		<url-pattern>*</url-pattern>
@@ -32,9 +40,17 @@
 		<servlet-name>oauth2callback</servlet-name>
 		<servlet-class>com.squarecash4glass.servlet.AuthServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>oauth2callbacksquare</servlet-name>
+		<servlet-class>com.squarecash4glass.servlet.SquareAuthServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>oauth2callback</servlet-name>
 		<url-pattern>/oauth2callback</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>oauth2callbacksquare</servlet-name>
+		<url-pattern>/oauth2callbacksquare</url-pattern>
 	</servlet-mapping>
 	<session-config>
 		<session-timeout>30</session-timeout>

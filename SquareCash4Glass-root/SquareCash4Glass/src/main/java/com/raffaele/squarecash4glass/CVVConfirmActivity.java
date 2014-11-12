@@ -146,6 +146,7 @@ public class CVVConfirmActivity extends Activity {
       // String DATA_PATH = this.getDir(dataPathDir.getAbsolutePath(),
       // Context.MODE_PRIVATE).getAbsolutePath()+"/";
       TessBaseAPI baseApi = new TessBaseAPI();
+      baseApi.setVariable("tessedit_char_whitelist", "0123456789");
       baseApi.setDebug(true);
       baseApi.init(dataPathDir.getAbsolutePath(), lang);
       baseApi.setImage(bitmap);

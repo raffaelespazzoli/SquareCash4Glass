@@ -43,17 +43,25 @@ public class AuthFilter implements Filter {
     if (response instanceof HttpServletResponse && request instanceof HttpServletRequest) {
       HttpServletRequest httpRequest = (HttpServletRequest) request;
       HttpServletResponse httpResponse = (HttpServletResponse) response;
+      
+      if (httpRequest.getParameter("authToken")!=null){
+    	  httpRequest.getSession().setAttribute("authToken", httpRequest.getParameter("authToken"));
+      }
 
       // skip auth for static content, middle of auth flow, notify servlet
       if (httpRequest.getRequestURI().startsWith("/static") ||
           httpRequest.getRequestURI().equals("/oauth2callback") ||
+          httpRequest.getRequestURI().equals("/oauth2callbacksquare") ||
+          httpRequest.getRequestURI().equals("/favicon.ico") ||
+          httpRequest.getRequestURI().equals("/script/jquery-2.1.1.js") ||
+          httpRequest.getRequestURI().equals("/SquareAuth.jsp") ||
           httpRequest.getRequestURI().contains("/_ah")) {
         LOG.info("Skipping auth check for certain urls");
         filterChain.doFilter(request, response);
         return;
       }
 
-      LOG.fine("Checking to see if anyone is logged in");
+      LOG.info("Checking to see if anyone is logged in");
       if (AuthUtil.getUserId(httpRequest) == null
           || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)) == null
           || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)).getAccessToken() == null) {
@@ -61,8 +69,19 @@ public class AuthFilter implements Filter {
         httpResponse.sendRedirect(WebUtil.buildUrl(httpRequest, "/oauth2callback"));
         return;
       }
+      
+      //TODO  check square is authenticated
 
+      if (AuthUtil.getUserId(httpRequest) == null
+              || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)+"square") == null
+              || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)+"square").getAccessToken() == null) {
+            // redirect to auth flow
+            httpResponse.sendRedirect(WebUtil.buildUrl(httpRequest, "/oauth2callbacksquare"));
+            return;
+          }
+      
       // Things checked out OK :)
+      LOG.info("User logged in, skipping filter");
       filterChain.doFilter(request, response);
     } else {
       LOG.warning("Unexpected non HTTP servlet response. Proceeding anyway.");
