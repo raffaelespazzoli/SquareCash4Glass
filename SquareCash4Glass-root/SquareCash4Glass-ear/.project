@@ -3,6 +3,9 @@
 	<name>SquareCash4Glass-ear</name>
 	<comment></comment>
 	<projects>
+		<project>SquareCash4Glass-common</project>
+		<project>SOA_FISEnrollments</project>
+		<project>SOA_TFA</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

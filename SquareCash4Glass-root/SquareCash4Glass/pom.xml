@@ -106,6 +106,31 @@
 			<scope>provided</scope>
 			<type>jar</type>
 		</dependency>
+		<dependency>
+			<groupId>com.squareup.retrofit</groupId>
+			<artifactId>retrofit</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>com.j256.ormlite</groupId> -->
+		<!-- <artifactId>ormlite-android</artifactId> -->
+		<!-- <version>4.48</version> -->
+		<!-- </dependency> -->
+		<dependency>
+			<groupId>com.activeandroid</groupId>
+			<artifactId>activeandroid</artifactId>
+			<version>3.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>SquareCash4Glass</groupId>
+			<artifactId>SquareCash4Glass-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>com.netflix.rxjava</groupId> -->
+		<!-- <artifactId>rxjava-android</artifactId> -->
+		<!-- <version>0.22</version> -->
+		<!-- </dependency> -->
 	</dependencies>
 	<build>
 		<plugins>

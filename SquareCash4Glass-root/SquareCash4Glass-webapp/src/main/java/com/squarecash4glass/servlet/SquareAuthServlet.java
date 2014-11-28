@@ -38,70 +38,63 @@ import com.squarecash4glass.util.SquareAuthUtil;
  */
 @SuppressWarnings("serial")
 public class SquareAuthServlet extends HttpServlet {
-	private static final Logger LOG = Logger.getLogger(SquareAuthServlet.class
-			.getSimpleName());
+  private static final Logger LOG = Logger.getLogger(SquareAuthServlet.class.getSimpleName());
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse res)
-			throws IOException, ServletException {
-			LOG.info("in square oauth flow");
-			manageSquareOauth(req, res);
-	}
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+    LOG.info("in square oauth flow");
+    manageSquareOauth(req, res);
+    // res.sendRedirect(WebUtil.buildUrl(req, "/main"));
+  }
 
+  /**
+   * @param req
+   * @param res
+   * @throws IOException
+   * @throws ServletException
+   */
+  private void manageSquareOauth(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+    // If something went wrong, log the error message.
+    if (req.getParameter("error") != null) {
+      LOG.severe("Something went wrong during auth: " + req.getParameter("error"));
+      res.setContentType("text/plain");
+      res.getWriter().write("Something went wrong during auth. Please check your log for details");
+      return;
+    }
 
-	/**
-	 * @param req
-	 * @param res
-	 * @throws IOException
-	 * @throws ServletException 
-	 */
-	private void manageSquareOauth(HttpServletRequest req,
-			HttpServletResponse res) throws IOException, ServletException {
-		// If something went wrong, log the error message.
-		if (req.getParameter("error") != null) {
-			LOG.severe("Something went wrong during auth: "
-					+ req.getParameter("error"));
-			res.setContentType("text/plain");
-			res.getWriter()
-					.write("Something went wrong during auth. Please check your log for details");
-			return;
-		}
+    // If we have a code, finish the OAuth 2.0 dance
+    if (req.getParameter("code") != null) {
+      LOG.info("Got a code. Attempting to exchange for access token.");
 
-		// If we have a code, finish the OAuth 2.0 dance
-		if (req.getParameter("code") != null) {
-			LOG.info("Got a code. Attempting to exchange for access token.");
+      AuthorizationCodeFlow flow = SquareAuthUtil.newAuthorizationCodeFlow();
+      TokenResponse tokenResponse = flow.newTokenRequest(req.getParameter("code")).setRedirectUri(WebUtil.buildUrl(req, "/oauth2callbacksquare")).execute();
 
-			AuthorizationCodeFlow flow = SquareAuthUtil.newAuthorizationCodeFlow();
-			TokenResponse tokenResponse = flow
-					.newTokenRequest(req.getParameter("code"))
-					.setRedirectUri(WebUtil.buildUrl(req, "/oauth2callbacksquare"))
-					.execute();
+      LOG.info("tokenResponse: " + tokenResponse);
 
-			LOG.info("tokenResponse: " + tokenResponse);
+      String userid = AuthUtil.getUserId(req);
+      flow.createAndStoreCredential(tokenResponse, userid + "square");
 
-			String userid=AuthUtil.getUserId(req);
-			flow.createAndStoreCredential(tokenResponse, userid+"square");
+      // Redirect back to index
+      res.sendRedirect(WebUtil.buildUrl(req, "/main"));
+      return;
+    }
 
-			// Redirect back to index
-			res.sendRedirect(WebUtil.buildUrl(req, "/main"));
-			return;
-		}
+    // Else, we have a new flow. Initiate a new flow.
+    LOG.info("No auth context found. Kicking off a new square auth flow.");
 
-		// Else, we have a new flow. Initiate a new flow.
-		LOG.info("No auth context found. Kicking off a new square auth flow.");
+    // req.getSession().setAttribute("SquareAuthBean",
+    // SquareAuthUtil.getSquareAuthBean());
+    // String nextJSP = "/SquareAuth.jsp";
+    // RequestDispatcher dispatcher =
+    // getServletContext().getRequestDispatcher(nextJSP);
+    // dispatcher.forward(req,res);
 
-//		req.getSession().setAttribute("SquareAuthBean", SquareAuthUtil.getSquareAuthBean());
-//		String nextJSP = "/SquareAuth.jsp";
-//		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
-//		dispatcher.forward(req,res);
-		
-		AuthorizationCodeFlow flow = SquareAuthUtil.newAuthorizationCodeFlow();
-		GenericUrl url = flow.newAuthorizationUrl().setRedirectUri(
-				WebUtil.buildUrl(req, "/oauth2callbacksquare"));
-		url.set("request_type", "code");
-		url.set("state", "ciao");
-		LOG.info("redirecting to URL: "+url.build());
-		res.sendRedirect(url.build());
-	}
+    AuthorizationCodeFlow flow = SquareAuthUtil.newAuthorizationCodeFlow();
+    GenericUrl url = flow.newAuthorizationUrl().setRedirectUri(WebUtil.buildUrl(req, "/oauth2callbacksquare"));
+    url.set("request_type", "code");
+    url.set("state", "ciao");
+    LOG.info("redirecting to URL: " + url.build());
+    res.sendRedirect(url.build());
+  }
 
 }

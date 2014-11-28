@@ -30,8 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * A filter which reacts to invalid grant_auth exceptions, typically caused when a user toggles a
- * Glassware 'off' on MyGlass. It redirects to the login flow when this happens.
+ * A filter which reacts to invalid grant_auth exceptions, typically caused when
+ * a user toggles a Glassware 'off' on MyGlass. It redirects to the login flow
+ * when this happens.
  *
  * @author Jenny Murphy - http://google.com/+JennyMurphy
  */
@@ -39,8 +40,7 @@ public class ReauthFilter implements Filter {
   private static final Logger LOG = Logger.getLogger(ReauthFilter.class.getSimpleName());
 
   @Override
-  public void doFilter(ServletRequest request, ServletResponse response,
-      FilterChain filterChain) throws IOException, ServletException {
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
     // Skip this filter if somehow we have a request that's not HTTP
     if (response instanceof HttpServletResponse && request instanceof HttpServletRequest) {

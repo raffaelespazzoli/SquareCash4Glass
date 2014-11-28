@@ -27,8 +27,8 @@ public class AmountActivity extends Activity {
   private int mAmount = 0;
   private GestureDetector mGestureDetector;
   private NumberFormat mCurrencyFormatter = NumberFormat.getCurrencyInstance();
-//  private EyeGestureManager mEyeGestureManager;
-//  private EyeGestureManager.Listener mEyeGestureListener;
+  // private EyeGestureManager mEyeGestureManager;
+  // private EyeGestureManager.Listener mEyeGestureListener;
   private SensorManager mSensorManager;
   private SensorEventListener mSensorEventListener;
 
@@ -39,8 +39,8 @@ public class AmountActivity extends Activity {
     setContentView(R.layout.amount_view);
     updateAmount();
     mGestureDetector = createGestureDetector(this);
-//    mEyeGestureManager = EyeGestureManager.from(this);
-//    mEyeGestureListener = createEyeGestureListener();
+    // mEyeGestureManager = EyeGestureManager.from(this);
+    // mEyeGestureListener = createEyeGestureListener();
     mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     mSensorEventListener = createSensorListener();
     Log.i(TAG, "onCreate completed.");
@@ -49,9 +49,9 @@ public class AmountActivity extends Activity {
   @Override
   protected void onStart() {
     super.onStart();
-//    mEyeGestureManager.stopDetector(EyeGesture.WINK);
-//    mEyeGestureManager.enableDetectorPersistently(EyeGesture.WINK, true);
-//    mEyeGestureManager.register(EyeGesture.WINK, mEyeGestureListener);
+    // mEyeGestureManager.stopDetector(EyeGesture.WINK);
+    // mEyeGestureManager.enableDetectorPersistently(EyeGesture.WINK, true);
+    // mEyeGestureManager.register(EyeGesture.WINK, mEyeGestureListener);
     Log.i(TAG, "onStart completed.");
   }
 
@@ -73,8 +73,8 @@ public class AmountActivity extends Activity {
   @Override
   protected void onStop() {
     super.onStop();
-//    mEyeGestureManager.unregister(EyeGesture.WINK, mEyeGestureListener);
-//    mEyeGestureManager.stopDetector(EyeGesture.WINK);
+    // mEyeGestureManager.unregister(EyeGesture.WINK, mEyeGestureListener);
+    // mEyeGestureManager.stopDetector(EyeGesture.WINK);
     Log.i(TAG, "onStop completed.");
   }
 
@@ -133,20 +133,21 @@ public class AmountActivity extends Activity {
     return false;
   }
 
-//  private EyeGestureManager.Listener createEyeGestureListener() {
-//    EyeGestureManager.Listener listener = new EyeGestureManager.Listener() {
-//      @Override
-//      public void onEnableStateChange(EyeGesture eyeGesture, boolean paramBoolean) {
-//        Log.i(TAG, eyeGesture + " state changed:" + paramBoolean);
-//      }
-//
-//      @Override
-//      public void onDetected(final EyeGesture eyeGesture) {
-//        Log.i(TAG, eyeGesture + " is detected");
-//      }
-//    };
-//    return listener;
-//  }
+  // private EyeGestureManager.Listener createEyeGestureListener() {
+  // EyeGestureManager.Listener listener = new EyeGestureManager.Listener() {
+  // @Override
+  // public void onEnableStateChange(EyeGesture eyeGesture, boolean
+  // paramBoolean) {
+  // Log.i(TAG, eyeGesture + " state changed:" + paramBoolean);
+  // }
+  //
+  // @Override
+  // public void onDetected(final EyeGesture eyeGesture) {
+  // Log.i(TAG, eyeGesture + " is detected");
+  // }
+  // };
+  // return listener;
+  // }
 
   private SensorEventListener createSensorListener() {
     SensorEventListener listener = new SensorEventListener() {
@@ -156,8 +157,8 @@ public class AmountActivity extends Activity {
       private float[] values = new float[3];
       private int triggerRotation1 = 80;
       private int triggerRotation2 = 45;
-      private long lastSensorEvent=0;
-      private long samplingInterval=5*100*1000*1000;
+      private long lastSensorEvent = 0;
+      private long samplingInterval = 5 * 100 * 1000 * 1000;
 
       @Override
       public final void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -166,7 +167,7 @@ public class AmountActivity extends Activity {
 
       @Override
       public final void onSensorChanged(SensorEvent event) {
-        //Log.i(TAG, event + " is detected");
+        // Log.i(TAG, event + " is detected");
         int type = event.sensor.getType();
         // Smoothing the sensor data a bit
         if (type == Sensor.TYPE_MAGNETIC_FIELD) {
@@ -182,15 +183,17 @@ public class AmountActivity extends Activity {
         SensorManager.getRotationMatrix(rotationMatrix, null, gravity, geomag);
         SensorManager.getOrientation(rotationMatrix, values);
         int azimuth = (int) Math.toDegrees(values[0]);
-        int pitch = -(int) Math.toDegrees(values[1]);;
+        int pitch = -(int) Math.toDegrees(values[1]);
+        ;
 
         // todo something with values
-//        Log.i(TAG, azimuth + " is the azimut");
-//        Log.i(TAG, pitch + " is the pitch");
-//        Log.i(TAG, triggerRotation1 + " is the triggerRotation1");
-//        Log.i(TAG, triggerRotation2 + " is the triggerRotation2");
-        if (event.timestamp-lastSensorEvent<samplingInterval) return;
-        lastSensorEvent=event.timestamp;
+        // Log.i(TAG, azimuth + " is the azimut");
+        // Log.i(TAG, pitch + " is the pitch");
+        // Log.i(TAG, triggerRotation1 + " is the triggerRotation1");
+        // Log.i(TAG, triggerRotation2 + " is the triggerRotation2");
+        if (event.timestamp - lastSensorEvent < samplingInterval)
+          return;
+        lastSensorEvent = event.timestamp;
         if (azimuth > 0) {
           if (pitch < triggerRotation2)
             if (MAX_AMOUNT > mAmount) {
@@ -218,8 +221,9 @@ public class AmountActivity extends Activity {
   }
 
   private void doLaunchContactPicker() {
-    //startActivity(new Intent(this, ContactActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
-    startActivity(new Intent(this, GoogleContactsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+    // startActivity(new Intent(this,
+    // ContactActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+    startActivity(new Intent(this, GoogleContactsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
   }
 

@@ -32,6 +32,23 @@
 		<servlet-name>main</servlet-name>
 		<servlet-class>com.squarecash4glass.servlet.MainServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>Jersey REST Service</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>com.squarecash4glass.rest</param-value>
+		</init-param>
+		<init-param>
+			<param-name>jersey.config.server.tracing</param-name>
+			<param-value>OFF</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Jersey REST Service</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>	
 	<servlet-mapping>
 		<servlet-name>main</servlet-name>
 		<url-pattern>/main</url-pattern>

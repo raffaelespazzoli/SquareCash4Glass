@@ -90,7 +90,6 @@ public class CVVConfirmActivity extends Activity {
 
   protected int currentZoomLevel;
 
-
   /**
    * Default empty constructor.
    */
@@ -133,13 +132,14 @@ public class CVVConfirmActivity extends Activity {
     });
     return gestureDetector;
   }
-  
-  class ProcessPictureTask extends AsyncTask<byte[],Void,String> {
+
+  class ProcessPictureTask extends AsyncTask<byte[], Void, String> {
     @Override
     protected String doInBackground(byte[]... bytes) {
-      if (bytes.length!=1) return null;
-      byte[] data=bytes[0];
-      Bitmap bitmap=BitmapFactory.decodeByteArray(data, 0, data.length);   
+      if (bytes.length != 1)
+        return null;
+      byte[] data = bytes[0];
+      Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
       String lang = "eng";
       // Make sure this path exist
       File dataPathDir = new File(getFilesDir(), InstallationListener.tesseactDirName);
@@ -154,43 +154,45 @@ public class CVVConfirmActivity extends Activity {
       Log.i(TAG, "recognizedText: " + recognizedText);
       Matcher CVVMatcher = CVVPattern.matcher(recognizedText);
       // we print the first occurrence if it exists
-      String result=null;
+      String result = null;
       if (CVVMatcher.find()) {
-        result=CVVMatcher.group();
+        result = CVVMatcher.group();
       }
-      Log.i(TAG, "ProcessPictureTask.doInBackground() completed, result: "+result);
+      Log.i(TAG, "ProcessPictureTask.doInBackground() completed, result: " + result);
       return result;
     }
-    protected void onPostExecute(String result){
-      if (result!=null) {
-        CVVCode=result;
-        ((TextView)findViewById(R.id.TextView1)).setText("Scanned Code: "+CVVCode);
+
+    protected void onPostExecute(String result) {
+      if (result != null) {
+        CVVCode = result;
+        ((TextView) findViewById(R.id.TextView1)).setText("Scanned Code: " + CVVCode);
       }
     }
 
   }
 
-//  private String processPicture(Bitmap bitmap) {
-//    String lang = "eng";
-//    // Make sure this path exist
-//    File dataPathDir = new File(getFilesDir(), InstallationListener.tesseactDirName);
-//    // String DATA_PATH = this.getDir(dataPathDir.getAbsolutePath(),
-//    // Context.MODE_PRIVATE).getAbsolutePath()+"/";
-//    TessBaseAPI baseApi = new TessBaseAPI();
-//    baseApi.setDebug(true);
-//    baseApi.init(dataPathDir.getAbsolutePath(), lang);
-//    baseApi.setImage(bitmap);
-//    String recognizedText = baseApi.getUTF8Text();
-//    Log.i(TAG, "recognizedText: " + recognizedText);
-//    Matcher CVVMatcher = CVVPattern.matcher(recognizedText);
-//    // we print the first occurrence if it exists
-//    String result=null;
-//    if (CVVMatcher.find()) {
-//      result=CVVMatcher.group();
-//    }
-//    Log.i(TAG, "processPicture() completed, result: "+result);
-//    return result;
-//  }
+  // private String processPicture(Bitmap bitmap) {
+  // String lang = "eng";
+  // // Make sure this path exist
+  // File dataPathDir = new File(getFilesDir(),
+  // InstallationListener.tesseactDirName);
+  // // String DATA_PATH = this.getDir(dataPathDir.getAbsolutePath(),
+  // // Context.MODE_PRIVATE).getAbsolutePath()+"/";
+  // TessBaseAPI baseApi = new TessBaseAPI();
+  // baseApi.setDebug(true);
+  // baseApi.init(dataPathDir.getAbsolutePath(), lang);
+  // baseApi.setImage(bitmap);
+  // String recognizedText = baseApi.getUTF8Text();
+  // Log.i(TAG, "recognizedText: " + recognizedText);
+  // Matcher CVVMatcher = CVVPattern.matcher(recognizedText);
+  // // we print the first occurrence if it exists
+  // String result=null;
+  // if (CVVMatcher.find()) {
+  // result=CVVMatcher.group();
+  // }
+  // Log.i(TAG, "processPicture() completed, result: "+result);
+  // return result;
+  // }
 
   /*
    * Send generic motion events to the gesture detector
@@ -474,7 +476,7 @@ public class CVVConfirmActivity extends Activity {
       } catch (Exception e) {
         e.printStackTrace();
       }
-      Log.i(TAG, "surfaceChanged() camera focus more: "+mCamera.getParameters().getFocusMode());
+      Log.i(TAG, "surfaceChanged() camera focus more: " + mCamera.getParameters().getFocusMode());
       Log.i(TAG, "surfaceChanged() completed.");
     }
 
@@ -586,8 +588,8 @@ public class CVVConfirmActivity extends Activity {
       return optimalSize;
     }
   }
-  
-  private final ShutterCallback mShutterCallback=new ShutterCallback(){
+
+  private final ShutterCallback mShutterCallback = new ShutterCallback() {
 
     @Override
     public void onShutter() {
@@ -596,7 +598,7 @@ public class CVVConfirmActivity extends Activity {
       audio.playSoundEffect(Sounds.TAP);
       Log.i(TAG, "onShutter() completed.");
     }
-    
+
   };
 
   /**
@@ -606,11 +608,11 @@ public class CVVConfirmActivity extends Activity {
   private final PictureCallback mPictureCallback = new PictureCallback() {
 
     @Override
-    public void onPictureTaken(byte[] data, Camera camera) {    
+    public void onPictureTaken(byte[] data, Camera camera) {
       new ProcessPictureTask().execute(data);
       mCamera.startPreview();
       Log.i(TAG, "onPictureTaken() completed.");
-    }  
+    }
   };
 
 }

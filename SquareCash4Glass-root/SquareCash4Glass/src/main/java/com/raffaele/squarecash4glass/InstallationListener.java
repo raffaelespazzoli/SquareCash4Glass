@@ -26,8 +26,8 @@ public class InstallationListener {
   public static void onStart(final Context context) {
     Log.i(TAG, "first launch event received");
     // check if the data is already there
-    File privateFilesDir=context.getFilesDir();
-    File tessDir = new File(privateFilesDir,tesseactDirName);
+    File privateFilesDir = context.getFilesDir();
+    File tessDir = new File(privateFilesDir, tesseactDirName);
     if (tessDir.exists() && Arrays.asList(tessDir.list()).contains(tessdataDirName)) {
       Log.i(TAG, "tesseact data already exists");
       return;
@@ -37,8 +37,10 @@ public class InstallationListener {
       public void run() {
         try {
           Log.i(TAG, "tesseact data does not exist");
-          //Log.i(TAG, "list of assets in /: "+Arrays.toString(context.getResources().getAssets().list("/")));
-          //Log.i(TAG, "list of assets in /assets: "+Arrays.toString(context.getResources().getAssets().list("/assets")));
+          // Log.i(TAG,
+          // "list of assets in /: "+Arrays.toString(context.getResources().getAssets().list("/")));
+          // Log.i(TAG,
+          // "list of assets in /assets: "+Arrays.toString(context.getResources().getAssets().list("/assets")));
           InputStream is = context.getResources().getAssets().open(tesseractAssetFileName);
           CompressedFilesUtils.unTar(is, context.getFilesDir());
           Log.i(TAG, "tesseact data successfully uncompressed");

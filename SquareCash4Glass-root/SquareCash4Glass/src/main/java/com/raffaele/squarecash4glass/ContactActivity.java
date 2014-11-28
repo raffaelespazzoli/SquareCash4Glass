@@ -48,9 +48,9 @@ public class ContactActivity extends Activity {
   private static final int LOOKUP_KEY_INDEX = 1;
 
   // Defines the text expression
-  private static final String SELECTION =Contacts.DISPLAY_NAME_PRIMARY +" LIKE ?";
+  private static final String SELECTION = Contacts.DISPLAY_NAME_PRIMARY + " LIKE ?";
   // Defines a variable for the search string
-  private String mSearchString="%" + "raffaele" + "%";
+  private String mSearchString = "%" + "raffaele" + "%";
   // Defines the array to hold values that replace the ?
   private String[] mSelectionArgs = { mSearchString };
 
@@ -88,9 +88,9 @@ public class ContactActivity extends Activity {
         /*
          * Makes search string into pattern and stores it in the selection array
          */
-        
+
         // Starts the query
-        CursorLoader cl=new CursorLoader(ContactActivity.this, Contacts.CONTENT_URI, PROJECTION, SELECTION, mSelectionArgs, null);
+        CursorLoader cl = new CursorLoader(ContactActivity.this, Contacts.CONTENT_URI, PROJECTION, SELECTION, mSelectionArgs, null);
         Log.i(TAG, "onCreateLoader completed.");
         return cl;
       }
