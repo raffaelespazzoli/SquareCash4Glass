@@ -12,7 +12,7 @@ import com.activeandroid.annotation.Table;
 @Table(name = "phone_numbers", id = BaseColumns._ID)
 public class PhoneNumberDTO extends Model{
   @Column(name = "contact")
-  public ContactDTO contact;
+  private ContactDTO contact;
   @Column
   private String phonenumber;
 

@@ -13,7 +13,7 @@ import com.activeandroid.annotation.Table;
 @Table(name = "emails",id = BaseColumns._ID)
 public class EmailDTO extends Model{
   @Column(name = "contact")
-  public ContactDTO contact;
+  private ContactDTO contact;
   @Column
   private String email;
 

@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -31,7 +32,12 @@
             android:value="com.raffaele.squarecash4glass.contacts.EmailDTO, 
     			   com.raffaele.squarecash4glass.contacts.ContactDTO,
     			   com.raffaele.squarecash4glass.contacts.PhoneNumberDTO" />
-		<provider android:authorities="om.raffaele.squarecash4glass" android:exported="false" android:name="com.activeandroid.content.ContentProvider" />
+
+        <provider
+            android:name="com.activeandroid.content.ContentProvider"
+            android:authorities="om.raffaele.squarecash4glass"
+            android:exported="false" />
+
         <activity
             android:name=".AmountActivity"
             android:icon="@drawable/square_logo"
@@ -70,7 +76,7 @@
                  via meta-data tag. This allows this activity to receive search intents via the
                  system hooks. In this sample this is only used on older OS versions (pre-Honeycomb)
                  via the activity search dialog. See the Search API guide for more information:
-                 http://developer.android.com/guide/topics/search/search-dialog.html
+                 http://developer.android.com/guide/topics/search/search-dialog.html
             -->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -90,6 +96,22 @@
             android:label="@string/title_activity_cvvconfirm"
             android:noHistory="true" >
         </activity>
+
+        <service
+            android:name="com.raffaele.squarecash4glass.contacts.synch.ContactSynchService"
+            android:process=":synch_process"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+
+        <receiver
+            android:name="com.raffaele.squarecash4glass.contacts.synch.ContactSynchEventReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
