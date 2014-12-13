@@ -8,9 +8,7 @@ import java.util.Arrays;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import com.raffaele.squarecash4glass.utils.CompressedFilesUtils;

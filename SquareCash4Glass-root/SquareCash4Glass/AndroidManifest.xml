@@ -31,7 +31,8 @@
             android:name="AA_MODELS"
             android:value="com.raffaele.squarecash4glass.contacts.EmailDTO, 
     			   com.raffaele.squarecash4glass.contacts.ContactDTO,
-    			   com.raffaele.squarecash4glass.contacts.PhoneNumberDTO" />
+    			   com.raffaele.squarecash4glass.contacts.PhoneNumberDTO,
+    			   com.raffaele.squarecash4glass.contacts.SynchStatusDTO" />
 
         <provider
             android:name="com.activeandroid.content.ContentProvider"
@@ -101,7 +102,7 @@
             android:name="com.raffaele.squarecash4glass.contacts.synch.ContactSynchService"
             android:process=":synch_process"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="true" >
         </service>
 
         <receiver

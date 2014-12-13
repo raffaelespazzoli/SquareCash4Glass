@@ -56,7 +56,7 @@ import com.squarecash4glass.util.AuthUtil;
 public class MainServlet extends HttpServlet {
 
   public void init() throws ServletException {
-    ObjectifyService.register(User.class);
+    
   }
 
   private static final Logger LOG = Logger.getLogger(MainServlet.class.getSimpleName());

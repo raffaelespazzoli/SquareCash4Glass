@@ -9,10 +9,9 @@
 	<modules>
 		<module>SquareCash4Glass-ear</module>
 		<module>SquareCash4Glass-webapp</module>
-<!-- 		<module>SquareCash4Glass-module</module> -->
-<!-- 		<module>SquareCash4Glass-common</module> -->
 		<module>SquareCash4Glass</module>
 		<module>SquareCash4Glass-common</module>
+		<module>SquareCash4Glass-test</module>
 	</modules>
 
 	<properties>

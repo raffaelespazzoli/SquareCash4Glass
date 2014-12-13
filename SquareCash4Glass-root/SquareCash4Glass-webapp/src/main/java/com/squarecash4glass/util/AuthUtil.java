@@ -18,6 +18,7 @@ package com.squarecash4glass.util;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,9 +72,12 @@ public class AuthUtil {
 
   }
 
-  public static StoredCredential getCredentialFromStore(String userId) throws IOException {
-    StoredCredential storedCredential = ds.get(userId);
-    return storedCredential;
+  public static Credential getCredentialFromStore(String userId) throws IOException {
+    Credential credential=getCredential(userId);
+    if (new Date().getTime() > credential.getExpirationTimeMilliseconds()){
+      credential.getRefreshToken();
+    }
+    return credential;
   }
 
   public static GoogleCredential getCredentialFromToken(TokenResponse tokenResponse) throws IOException {

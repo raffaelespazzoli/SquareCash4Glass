@@ -16,6 +16,11 @@
 
 package com.raffaele.squarecash4glass;
 
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Locale;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -55,11 +60,6 @@ import android.widget.QuickContactBadge;
 import android.widget.SearchView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
-
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Locale;
 
 import com.raffaele.squarecash4glass.utils.ImageLoader;
 import com.raffaele.squarecash4glass.utils.Utils;

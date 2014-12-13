@@ -27,6 +27,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.googlecode.objectify.ObjectifyService;
+import com.squarecash4glass.dto.User;
 import com.squarecash4glass.util.AuthUtil;
 
 /**
@@ -90,6 +92,7 @@ public class AuthFilter implements Filter {
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
+    ObjectifyService.register(User.class);
   }
 
   @Override

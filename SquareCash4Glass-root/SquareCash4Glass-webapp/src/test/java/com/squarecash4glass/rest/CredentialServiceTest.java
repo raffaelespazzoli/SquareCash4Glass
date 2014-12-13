@@ -19,7 +19,7 @@ public class CredentialServiceTest {
   private static final Logger log = Logger.getLogger(CredentialServiceTest.class.getName());
 
   @Test
-  public void testgetCredential() throws IOException {
+  public void testGetCredential() throws IOException {
 
     System.setProperty("http.proxyHost", "proxy.keybank.com");
     System.setProperty("http.proxyPort", "80");

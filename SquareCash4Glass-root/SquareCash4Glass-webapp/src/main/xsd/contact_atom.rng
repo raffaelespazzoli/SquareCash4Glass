@@ -1,0 +1,1357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  RELAX NG Compact Syntax Grammar
+  Description: Google Contacts: feed of contacts
+-->
+<grammar xmlns:app="http://www.w3.org/2007/app" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:gd="http://schemas.google.com/g/2005" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <choice>
+      <ref name="contacts_contactFeed"/>
+      <ref name="contacts_contactEntry"/>
+    </choice>
+  </start>
+  <!-- Person's additional (often: middle) name -->
+  <define name="gdata_additionalName">
+    <element name="gd:additionalName">
+      <optional>
+        <attribute name="yomi">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Used in work addresses.  Also for 'in care of' or 'c/o' -->
+  <define name="gdata_agent">
+    <element name="gd:agent">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes an author -->
+  <define name="atom_author">
+    <element name="atom:author">
+      <optional>
+        <attribute name="xml:lang">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <optional>
+          <ref name="atom_email"/>
+        </optional>
+        <ref name="atom_name"/>
+        <optional>
+          <ref name="atom_uri"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <!-- Contact's billing information -->
+  <define name="contacts_billingInformation">
+    <element name="gContact:billingInformation">
+      <optional>
+        <data type="string"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Contact's birth date -->
+  <define name="contacts_birthday">
+    <element name="gContact:birthday">
+      <optional>
+        <attribute name="when">
+          <data type="string"/>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <!-- Contact related calendar link -->
+  <define name="contacts_calendarLink">
+    <element name="gContact:calendarLink">
+      <attribute name="href">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="primary">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <choice>
+            <value>free-busy</value>
+            <value>home</value>
+            <value>work</value>
+          </choice>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <!-- Describes a category -->
+  <define name="atom_category">
+    <element name="atom:category">
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="scheme">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <attribute name="term">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="xml:lang">
+          <data type="string"/>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <!-- Can be city, village, town, borough, etc -->
+  <define name="gdata_city">
+    <element name="gd:city">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes a contact entry -->
+  <define name="contacts_contactEntry">
+    <element name="atom:entry">
+      <optional>
+        <attribute name="gd:etag">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <optional>
+          <ref name="app_edited"/>
+        </optional>
+        <optional>
+          <ref name="atom_content"/>
+        </optional>
+        <ref name="atom_id"/>
+        <ref name="atom_updated"/>
+        <optional>
+          <ref name="contacts_billingInformation"/>
+        </optional>
+        <optional>
+          <ref name="contacts_birthday"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="contacts_calendarLink"/>
+        </zeroOrMore>
+        <ref name="contacts_contactKind"/>
+        <oneOrMore>
+          <ref name="contacts_contactLink"/>
+        </oneOrMore>
+        <optional>
+          <ref name="contacts_directoryServer"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="contacts_event"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="contacts_externalId"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="contacts_gender"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="contacts_groupMembershipInfo"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="contacts_hobby"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="contacts_initials"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="contacts_jot"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="contacts_language"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="contacts_maidenName"/>
+        </optional>
+        <optional>
+          <ref name="contacts_mileage"/>
+        </optional>
+        <optional>
+          <ref name="contacts_nickname"/>
+        </optional>
+        <optional>
+          <ref name="contacts_occupation"/>
+        </optional>
+        <optional>
+          <ref name="contacts_priority"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="contacts_relation"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="contacts_sensitivity"/>
+        </optional>
+        <optional>
+          <ref name="contacts_shortName"/>
+        </optional>
+        <optional>
+          <ref name="contacts_subject"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="contacts_userDefinedField"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="contacts_website"/>
+        </zeroOrMore>
+        <element name="atom:title">
+          <ref name="atom_textConstruct"/>
+        </element>
+        <optional>
+          <ref name="gdata_deleted"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="gdata_email"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="gdata_extendedProperty"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="gdata_im"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="gdata_name"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="gdata_organization"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="gdata_phoneNumber"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="gdata_postalAddress"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="gdata_structuredPostalAddress"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="gdata_where"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <!-- Describes a contact feed -->
+  <define name="contacts_contactFeed">
+    <element name="atom:feed">
+      <optional>
+        <attribute name="gd:etag">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <oneOrMore>
+          <ref name="atom_author"/>
+        </oneOrMore>
+        <ref name="atom_generator"/>
+        <ref name="atom_id"/>
+        <ref name="atom_updated"/>
+        <zeroOrMore>
+          <ref name="contacts_contactEntry"/>
+        </zeroOrMore>
+        <ref name="contacts_contactKind"/>
+        <oneOrMore>
+          <ref name="contacts_contactLink"/>
+        </oneOrMore>
+        <element name="atom:title">
+          <ref name="atom_textConstruct"/>
+        </element>
+        <ref name="opensearch_itemsPerPage"/>
+        <ref name="opensearch_startIndex"/>
+        <ref name="opensearch_totalResults"/>
+      </interleave>
+    </element>
+  </define>
+  <!-- Describes a contact kind -->
+  <define name="contacts_contactKind">
+    <element name="atom:category">
+      <attribute name="scheme">
+        <value>http://schemas.google.com/g/2005#kind</value>
+      </attribute>
+      <attribute name="term">
+        <value>http://schemas.google.com/contact/2008#contact</value>
+      </attribute>
+    </element>
+  </define>
+  <!-- Extends the base Link class with contact extensions -->
+  <define name="contacts_contactLink">
+    <element name="atom:link">
+      <attribute name="href">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="length">
+          <data type="long"/>
+        </attribute>
+      </optional>
+      <attribute name="rel">
+        <choice>
+          <value>alternate</value>
+          <value>edit</value>
+          <value>http://schemas.google.com/contacts/2008/rel#edit-photo</value>
+          <value>http://schemas.google.com/contacts/2008/rel#photo</value>
+          <value>http://schemas.google.com/g/2005#batch</value>
+          <value>http://schemas.google.com/g/2005#feed</value>
+          <value>http://schemas.google.com/g/2005#post</value>
+          <value>next</value>
+          <value>previous</value>
+          <value>self</value>
+        </choice>
+      </attribute>
+      <optional>
+        <attribute name="title">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <attribute name="type">
+        <choice>
+          <value>application/atom+xml</value>
+          <value>image/*</value>
+          <value>text/html</value>
+        </choice>
+      </attribute>
+    </element>
+  </define>
+  <!-- Describes a content -->
+  <define name="atom_content">
+    <element name="atom:content">
+      <optional>
+        <attribute name="src">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="type">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="xml:lang">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <data type="string"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Describes a contributor -->
+  <define name="atom_contributor">
+    <element name="atom:contributor">
+      <optional>
+        <attribute name="xml:lang">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <optional>
+          <ref name="atom_email"/>
+        </optional>
+        <ref name="atom_name"/>
+        <optional>
+          <ref name="atom_uri"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <!-- Describes an Atom publication control status -->
+  <define name="app_control">
+    <element name="app:control">
+      <ref name="app_draft"/>
+    </element>
+  </define>
+  <!-- The country name -->
+  <define name="gdata_country">
+    <element name="gd:country">
+      <optional>
+        <attribute name="gd:code">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <data type="string"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Denotes an entry has been deleted -->
+  <define name="gdata_deleted">
+    <element name="gd:deleted">
+      <empty/>
+    </element>
+  </define>
+  <!-- Contact's directory server -->
+  <define name="contacts_directoryServer">
+    <element name="gContact:directoryServer">
+      <optional>
+        <data type="string"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Value of the app:draft tag -->
+  <define name="app_draft">
+    <element name="app:draft">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Value of the app:edited tag -->
+  <define name="app_edited">
+    <element name="app:edited">
+      <choice>
+        <data type="date"/>
+        <data type="dateTime"/>
+      </choice>
+    </element>
+  </define>
+  <!-- Describes an author's email address -->
+  <define name="atom_email">
+    <element name="atom:email">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes an email address -->
+  <define name="gdata_email">
+    <element name="gd:email">
+      <attribute name="address">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="displayName">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="primary">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <!-- Describes a Google Data API Entry -->
+  <define name="gdata_entry">
+    <element name="atom:entry">
+      <optional>
+        <attribute name="gd:etag">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <optional>
+          <ref name="app_control"/>
+        </optional>
+        <optional>
+          <ref name="app_edited"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="atom_author"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="atom_category"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="atom_content"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="atom_contributor"/>
+        </zeroOrMore>
+        <ref name="atom_id"/>
+        <zeroOrMore>
+          <ref name="atom_link"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="atom_published"/>
+        </optional>
+        <ref name="atom_updated"/>
+        <optional>
+          <element name="atom:rights">
+            <ref name="atom_textConstruct"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="atom:summary">
+            <ref name="atom_textConstruct"/>
+          </element>
+        </optional>
+        <element name="atom:title">
+          <ref name="atom_textConstruct"/>
+        </element>
+      </interleave>
+    </element>
+  </define>
+  <!-- Describes a nested entry link -->
+  <define name="gdata_entryLink">
+    <element name="gd:entryLink">
+      <optional>
+        <attribute name="href">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="readOnly">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <ref name="gdata_entry"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Contact's events -->
+  <define name="contacts_event">
+    <element name="gContact:event">
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <ref name="gdata_when"/>
+    </element>
+  </define>
+  <!--
+    Stores a limited amount of custom data as an auxiliary property of the
+    enclosing entity
+  -->
+  <define name="gdata_extendedProperty">
+    <element name="gd:extendedProperty">
+      <attribute name="name">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="realm">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="value">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <ref name="anyElement"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Contact's external id field -->
+  <define name="contacts_externalId">
+    <element name="gContact:externalId">
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <attribute name="value">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  <!-- Person's family name -->
+  <define name="gdata_familyName">
+    <element name="gd:familyName">
+      <optional>
+        <attribute name="yomi">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- User-formatted, full address -->
+  <define name="gdata_formattedAddress">
+    <element name="gd:formattedAddress">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Person's full, formatted name -->
+  <define name="gdata_fullName">
+    <element name="gd:fullName">
+      <optional>
+        <attribute name="yomi">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Contact's gender -->
+  <define name="contacts_gender">
+    <element name="gContact:gender">
+      <attribute name="value">
+        <choice>
+          <value>female</value>
+          <value>male</value>
+        </choice>
+      </attribute>
+    </element>
+  </define>
+  <!-- Describes the generator -->
+  <define name="atom_generator">
+    <element name="atom:generator">
+      <optional>
+        <attribute name="uri">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="version">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Person's given name -->
+  <define name="gdata_givenName">
+    <element name="gd:givenName">
+      <optional>
+        <attribute name="yomi">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Denotes contact's group membership -->
+  <define name="contacts_groupMembershipInfo">
+    <element name="gContact:groupMembershipInfo">
+      <optional>
+        <attribute name="deleted">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <attribute name="href">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  <!-- Contact's hobby -->
+  <define name="contacts_hobby">
+    <element name="gContact:hobby">
+      <optional>
+        <data type="string"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Used in places where houses or buildings have names -->
+  <define name="gdata_houseName">
+    <element name="gd:housename">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes a unique identifier -->
+  <define name="atom_id">
+    <element name="atom:id">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes an instant messaging address -->
+  <define name="gdata_im">
+    <element name="gd:im">
+      <attribute name="address">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="primary">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="protocol">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <!-- Contact's initials -->
+  <define name="contacts_initials">
+    <element name="gContact:initials">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes the number of items that will be returned per page for paged feeds -->
+  <define name="opensearch_itemsPerPage">
+    <element name="openSearch:itemsPerPage">
+      <data type="int"/>
+    </element>
+  </define>
+  <!-- Contact's jot -->
+  <define name="contacts_jot">
+    <element name="gContact:jot">
+      <attribute name="rel">
+        <choice>
+          <value>home</value>
+          <value>keywords</value>
+          <value>other</value>
+          <value>user</value>
+          <value>work</value>
+        </choice>
+      </attribute>
+      <optional>
+        <data type="string"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Contact's language field -->
+  <define name="contacts_language">
+    <element name="gContact:language">
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="xml:lang">
+          <data type="string"/>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <!-- Describes an external link type -->
+  <define name="atom_link">
+    <element name="atom:link">
+      <attribute name="href">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="hreflang">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="length">
+          <data type="long"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="title">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="type">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="xml:lang">
+          <data type="string"/>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <!-- Contact's maiden name -->
+  <define name="contacts_maidenName">
+    <element name="gContact:maidenName">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Contact's mileage -->
+  <define name="contacts_mileage">
+    <element name="gContact:mileage">
+      <optional>
+        <data type="string"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Describes an author's human-readable name -->
+  <define name="atom_name">
+    <element name="atom:name">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Name of a person in a structured form -->
+  <define name="gdata_name">
+    <element name="gd:name">
+      <interleave>
+        <optional>
+          <ref name="gdata_additionalName"/>
+        </optional>
+        <optional>
+          <ref name="gdata_familyName"/>
+        </optional>
+        <optional>
+          <ref name="gdata_fullName"/>
+        </optional>
+        <optional>
+          <ref name="gdata_givenName"/>
+        </optional>
+        <optional>
+          <ref name="gdata_namePrefix"/>
+        </optional>
+        <optional>
+          <ref name="gdata_nameSuffix"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <!-- Prefix to a person's name -->
+  <define name="gdata_namePrefix">
+    <element name="gd:namePrefix">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Suffix to a person's name -->
+  <define name="gdata_nameSuffix">
+    <element name="gd:nameSuffix">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Neighborhood. Used to disambiguate a street -->
+  <define name="gdata_neighborhood">
+    <element name="gd:neighborhood">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Contact's nickname -->
+  <define name="contacts_nickname">
+    <element name="gContact:nickname">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Contact's hobby -->
+  <define name="contacts_occupation">
+    <element name="gContact:occupation">
+      <optional>
+        <data type="string"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Department in the organization -->
+  <define name="gdata_orgDepartment">
+    <element name="gd:orgDepartment">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Job description -->
+  <define name="gdata_orgJobDescription">
+    <element name="gd:orgJobDescription">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Name of organization -->
+  <define name="gdata_orgName">
+    <element name="gd:orgName">
+      <optional>
+        <attribute name="yomi">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Organization symbol/ticker -->
+  <define name="gdata_orgSymbol">
+    <element name="gd:orgSymbol">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Position in organization -->
+  <define name="gdata_orgTitle">
+    <element name="gd:orgTitle">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes an organization (like Company) -->
+  <define name="gdata_organization">
+    <element name="gd:organization">
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="primary">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <optional>
+          <ref name="gdata_orgDepartment"/>
+        </optional>
+        <optional>
+          <ref name="gdata_orgJobDescription"/>
+        </optional>
+        <optional>
+          <ref name="gdata_orgName"/>
+        </optional>
+        <optional>
+          <ref name="gdata_orgSymbol"/>
+        </optional>
+        <optional>
+          <ref name="gdata_orgTitle"/>
+        </optional>
+        <optional>
+          <ref name="gdata_where"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <!-- Describes a phone number -->
+  <define name="gdata_phoneNumber">
+    <element name="gd:phoneNumber">
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="primary">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- P.O. box -->
+  <define name="gdata_poBox">
+    <element name="gd:pobox">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Postal code -->
+  <define name="gdata_postCode">
+    <element name="gd:postcode">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes a postal address -->
+  <define name="gdata_postalAddress">
+    <element name="gd:postalAddress">
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="primary">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Contact's priority -->
+  <define name="contacts_priority">
+    <element name="gContact:priority">
+      <attribute name="rel">
+        <choice>
+          <value>high</value>
+          <value>low</value>
+          <value>normal</value>
+        </choice>
+      </attribute>
+    </element>
+  </define>
+  <!-- Describes a creation timestamp -->
+  <define name="atom_published">
+    <element name="atom:published">
+      <choice>
+        <data type="date"/>
+        <data type="dateTime"/>
+      </choice>
+    </element>
+  </define>
+  <!--
+    Region is state, province, county (in Ireland), Land (in Germany), d?partement
+    (in France),
+    etc
+  -->
+  <define name="gdata_region">
+    <element name="gd:region">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Contact's relation -->
+  <define name="contacts_relation">
+    <element name="gContact:relation">
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <choice>
+            <value>assistant</value>
+            <value>brother</value>
+            <value>child</value>
+            <value>domestic-partner</value>
+            <value>father</value>
+            <value>friend</value>
+            <value>manager</value>
+            <value>mother</value>
+            <value>parent</value>
+            <value>partner</value>
+            <value>referred-by</value>
+            <value>relative</value>
+            <value>sister</value>
+            <value>spouse</value>
+          </choice>
+        </attribute>
+      </optional>
+      <optional>
+        <data type="string"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Describes a reminder on an event -->
+  <define name="gdata_reminder">
+    <element name="gd:reminder">
+      <optional>
+        <attribute name="absoluteTime">
+          <choice>
+            <data type="date"/>
+            <data type="dateTime"/>
+          </choice>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="days">
+          <data type="int"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="hours">
+          <data type="int"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="method">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="minutes">
+          <data type="int"/>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <!-- Contact's sensitivity -->
+  <define name="contacts_sensitivity">
+    <element name="gContact:sensitivity">
+      <attribute name="rel">
+        <choice>
+          <value>confidential</value>
+          <value>normal</value>
+          <value>personal</value>
+          <value>private</value>
+        </choice>
+      </attribute>
+    </element>
+  </define>
+  <!-- Contact's short name -->
+  <define name="contacts_shortName">
+    <element name="gContact:shortName">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes the starting index of the contained entries for paged feeds -->
+  <define name="opensearch_startIndex">
+    <element name="openSearch:startIndex">
+      <data type="int"/>
+    </element>
+  </define>
+  <!-- Describes a street -->
+  <define name="gdata_street">
+    <element name="gd:street">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes a structured postal address -->
+  <define name="gdata_structuredPostalAddress">
+    <element name="gd:structuredPostalAddress">
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="mailClass">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="primary">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="usage">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <optional>
+          <ref name="gdata_agent"/>
+        </optional>
+        <optional>
+          <ref name="gdata_city"/>
+        </optional>
+        <optional>
+          <ref name="gdata_country"/>
+        </optional>
+        <optional>
+          <ref name="gdata_formattedAddress"/>
+        </optional>
+        <optional>
+          <ref name="gdata_houseName"/>
+        </optional>
+        <optional>
+          <ref name="gdata_neighborhood"/>
+        </optional>
+        <optional>
+          <ref name="gdata_poBox"/>
+        </optional>
+        <optional>
+          <ref name="gdata_postCode"/>
+        </optional>
+        <optional>
+          <ref name="gdata_region"/>
+        </optional>
+        <optional>
+          <ref name="gdata_street"/>
+        </optional>
+        <optional>
+          <ref name="gdata_subregion"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <!-- Contact's subject -->
+  <define name="contacts_subject">
+    <element name="gContact:subject">
+      <optional>
+        <data type="string"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Subregion is county (US), province (in Italy), etc -->
+  <define name="gdata_subregion">
+    <element name="gd:subregion">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Describes a text construct containing either plain text, HTML, or XHTML -->
+  <define name="atom_textConstruct">
+    <optional>
+      <attribute name="src">
+        <data type="string"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="type">
+        <data type="string"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="xml:lang">
+        <data type="string"/>
+      </attribute>
+    </optional>
+    <optional>
+      <data type="string"/>
+    </optional>
+  </define>
+  <!-- Describes the total number of results associated with this feed -->
+  <define name="opensearch_totalResults">
+    <element name="openSearch:totalResults">
+      <data type="int"/>
+    </element>
+  </define>
+  <!-- Describes a last updated timestamp -->
+  <define name="atom_updated">
+    <element name="atom:updated">
+      <choice>
+        <data type="date"/>
+        <data type="dateTime"/>
+      </choice>
+    </element>
+  </define>
+  <!-- Describes the URI associated with an author -->
+  <define name="atom_uri">
+    <element name="atom:uri">
+      <data type="string"/>
+    </element>
+  </define>
+  <!-- Contact's user defined field -->
+  <define name="contacts_userDefinedField">
+    <element name="gContact:userDefinedField">
+      <attribute name="key">
+        <data type="string"/>
+      </attribute>
+      <attribute name="value">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  <!-- Contact related website -->
+  <define name="contacts_website">
+    <element name="gContact:website">
+      <attribute name="href">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="primary">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <choice>
+            <value>blog</value>
+            <value>ftp</value>
+            <value>home</value>
+            <value>home-page</value>
+            <value>other</value>
+            <value>profile</value>
+            <value>work</value>
+          </choice>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <!-- Describes a period of time -->
+  <define name="gdata_when">
+    <element name="gd:when">
+      <optional>
+        <attribute name="endTime">
+          <choice>
+            <data type="date"/>
+            <data type="dateTime"/>
+          </choice>
+        </attribute>
+      </optional>
+      <attribute name="startTime">
+        <choice>
+          <data type="date"/>
+          <data type="dateTime"/>
+        </choice>
+      </attribute>
+      <optional>
+        <attribute name="valueString">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <zeroOrMore>
+        <ref name="gdata_reminder"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <!-- Describes a place (not necessarily a specific geographical location) -->
+  <define name="gdata_where">
+    <element name="gd:where">
+      <optional>
+        <attribute name="label">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="rel">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="valueString">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <ref name="gdata_entryLink"/>
+      </optional>
+    </element>
+  </define>
+  <!-- defines any arbitrary XML element -->
+  <define name="anyElement">
+    <element>
+      <anyName/>
+      <zeroOrMore>
+        <choice>
+          <attribute>
+            <anyName/>
+          </attribute>
+          <text/>
+          <ref name="anyElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+</grammar>

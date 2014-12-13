@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.w3.org/2005/Atom" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns:gd="http://schemas.google.com/g/2005" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/">
+  <xs:import namespace="http://a9.com/-/spec/opensearch/1.1/" schemaLocation="openSearch.xsd"/>
+  <xs:import namespace="http://schemas.google.com/contact/2008" schemaLocation="gContact.xsd"/>
+  <xs:import namespace="http://schemas.google.com/g/2005" schemaLocation="contact_atom.xsd"/>
+  <xs:import namespace="http://www.w3.org/2007/app" schemaLocation="app.xsd"/>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+  <xs:element name="author">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="atom:email"/>
+        <xs:element ref="atom:name"/>
+        <xs:element ref="atom:uri"/>
+      </xs:choice>
+      <xs:attribute ref="xml:lang"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="category">
+    <xs:sequence>
+      <xs:element name="category">
+        <xs:complexType>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="scheme" type="xs:string"/>
+          <xs:attribute name="term" use="required" type="xs:string"/>
+          <xs:attribute ref="xml:lang"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="entry">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="app:edited"/>
+            <xs:element ref="atom:content"/>
+            <xs:element ref="atom:id"/>
+            <xs:element ref="atom:updated"/>
+            <xs:element ref="gContact:billingInformation"/>
+            <xs:element ref="gContact:birthday"/>
+            <xs:element ref="gContact:calendarLink"/>
+            <xs:group ref="gd:contacts_contactKind"/>
+            <xs:group ref="gd:contacts_contactLink"/>
+            <xs:element ref="gContact:directoryServer"/>
+            <xs:element ref="gContact:event"/>
+            <xs:element ref="gContact:externalId"/>
+            <xs:element ref="gContact:gender"/>
+            <xs:element ref="gContact:groupMembershipInfo"/>
+            <xs:element ref="gContact:hobby"/>
+            <xs:element ref="gContact:initials"/>
+            <xs:element ref="gContact:jot"/>
+            <xs:element ref="gContact:language"/>
+            <xs:element ref="gContact:maidenName"/>
+            <xs:element ref="gContact:mileage"/>
+            <xs:element ref="gContact:nickname"/>
+            <xs:element ref="gContact:occupation"/>
+            <xs:element ref="gContact:priority"/>
+            <xs:element ref="gContact:relation"/>
+            <xs:element ref="gContact:sensitivity"/>
+            <xs:element ref="gContact:shortName"/>
+            <xs:element ref="gContact:subject"/>
+            <xs:element ref="gContact:userDefinedField"/>
+            <xs:element ref="gContact:website"/>
+            <xs:element ref="atom:title"/>
+            <xs:element ref="gd:deleted"/>
+            <xs:element ref="gd:email"/>
+            <xs:element ref="gd:extendedProperty"/>
+            <xs:element ref="gd:im"/>
+            <xs:element ref="gd:name"/>
+            <xs:element ref="gd:organization"/>
+            <xs:element ref="gd:phoneNumber"/>
+            <xs:element ref="gd:postalAddress"/>
+            <xs:element ref="gd:structuredPostalAddress"/>
+            <xs:element ref="gd:where"/>
+          </xs:choice>
+          <xs:attribute ref="gd:etag"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="title">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:restriction base="xs:anyType">
+          <xs:simpleType>
+            <xs:union memberTypes="gd:atom_textConstruct">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:union>
+          </xs:simpleType>
+          <xs:attributeGroup ref="gd:atom_textConstruct"/>
+        </xs:restriction>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="feed">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="atom:author"/>
+        <xs:element ref="atom:generator"/>
+        <xs:element ref="atom:id"/>
+        <xs:element ref="atom:updated"/>
+        <xs:group ref="gd:contacts_contactEntry"/>
+        <xs:group ref="gd:contacts_contactKind"/>
+        <xs:group ref="gd:contacts_contactLink"/>
+        <xs:element ref="atom:title"/>
+        <xs:element ref="openSearch:itemsPerPage"/>
+        <xs:element ref="openSearch:startIndex"/>
+        <xs:element ref="openSearch:totalResults"/>
+      </xs:choice>
+      <xs:attribute ref="gd:etag"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="category1">
+    <xs:sequence>
+      <xs:element name="category">
+        <xs:complexType>
+          <xs:attribute name="scheme" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="http://schemas.google.com/g/2005#kind"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="term" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="http://schemas.google.com/contact/2008#contact"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="link">
+    <xs:sequence>
+      <xs:element name="link">
+        <xs:complexType>
+          <xs:attribute name="href" use="required" type="xs:string"/>
+          <xs:attribute name="length" type="xs:long"/>
+          <xs:attribute name="rel" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="alternate"/>
+                <xs:enumeration value="edit"/>
+                <xs:enumeration value="http://schemas.google.com/contacts/2008/rel#edit-photo"/>
+                <xs:enumeration value="http://schemas.google.com/contacts/2008/rel#photo"/>
+                <xs:enumeration value="http://schemas.google.com/g/2005#batch"/>
+                <xs:enumeration value="http://schemas.google.com/g/2005#feed"/>
+                <xs:enumeration value="http://schemas.google.com/g/2005#post"/>
+                <xs:enumeration value="next"/>
+                <xs:enumeration value="previous"/>
+                <xs:enumeration value="self"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="title" type="xs:string"/>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="application/atom+xml"/>
+                <xs:enumeration value="image/*"/>
+                <xs:enumeration value="text/html"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="content">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:restriction base="xs:anyType">
+          <xs:simpleType>
+            <xs:union memberTypes="xs:string">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:union>
+          </xs:simpleType>
+          <xs:attribute name="src" type="xs:string"/>
+          <xs:attribute name="type" type="xs:string"/>
+          <xs:attribute ref="xml:lang"/>
+        </xs:restriction>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="contributor">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="atom:email"/>
+        <xs:element ref="atom:name"/>
+        <xs:element ref="atom:uri"/>
+      </xs:choice>
+      <xs:attribute ref="xml:lang"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="email" type="xs:string"/>
+  <xs:group name="entry1">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="app:control"/>
+            <xs:element ref="app:edited"/>
+            <xs:element ref="atom:author"/>
+            <xs:group ref="gd:atom_category"/>
+            <xs:element ref="atom:content"/>
+            <xs:element ref="atom:contributor"/>
+            <xs:element ref="atom:id"/>
+            <xs:group ref="gd:atom_link"/>
+            <xs:element ref="atom:published"/>
+            <xs:element ref="atom:updated"/>
+            <xs:element ref="atom:rights"/>
+            <xs:element ref="atom:summary"/>
+            <xs:element ref="atom:title"/>
+          </xs:choice>
+          <xs:attribute ref="gd:etag"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="rights">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:restriction base="xs:anyType">
+          <xs:simpleType>
+            <xs:union memberTypes="gd:atom_textConstruct">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:union>
+          </xs:simpleType>
+          <xs:attributeGroup ref="gd:atom_textConstruct"/>
+        </xs:restriction>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="summary">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:restriction base="xs:anyType">
+          <xs:simpleType>
+            <xs:union memberTypes="gd:atom_textConstruct">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:union>
+          </xs:simpleType>
+          <xs:attributeGroup ref="gd:atom_textConstruct"/>
+        </xs:restriction>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="generator">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="uri" type="xs:string"/>
+          <xs:attribute name="version" type="xs:string"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="id" type="xs:string"/>
+  <xs:group name="link1">
+    <xs:sequence>
+      <xs:element name="link">
+        <xs:complexType>
+          <xs:attribute name="href" use="required" type="xs:string"/>
+          <xs:attribute name="hreflang" type="xs:string"/>
+          <xs:attribute name="length" type="xs:long"/>
+          <xs:attribute name="rel" type="xs:string"/>
+          <xs:attribute name="title" type="xs:string"/>
+          <xs:attribute name="type" type="xs:string"/>
+          <xs:attribute ref="xml:lang"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="published">
+    <xs:simpleType>
+      <xs:union memberTypes="xs:date xs:dateTime"/>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="updated">
+    <xs:simpleType>
+      <xs:union memberTypes="xs:date xs:dateTime"/>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="uri" type="xs:string"/>
+</xs:schema>

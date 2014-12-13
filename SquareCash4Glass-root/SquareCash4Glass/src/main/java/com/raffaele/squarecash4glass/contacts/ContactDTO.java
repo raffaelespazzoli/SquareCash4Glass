@@ -5,10 +5,11 @@ import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import android.provider.BaseColumns;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import android.provider.BaseColumns;
 
 @Table(name = "contacts", id = BaseColumns._ID)
 public class ContactDTO extends Model {

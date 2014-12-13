@@ -16,6 +16,9 @@
 
 package com.raffaele.squarecash4glass.utils;
 
+import java.io.FileDescriptor;
+import java.lang.ref.WeakReference;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -28,9 +31,6 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ImageView;
-
-import java.io.FileDescriptor;
-import java.lang.ref.WeakReference;
 
 import com.raffaele.squarecash4glass.BuildConfig;
 

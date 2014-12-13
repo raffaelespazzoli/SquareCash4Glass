@@ -18,6 +18,7 @@ import android.widget.TextView;
 //import com.google.android.glass.eye.EyeGestureManager;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
+import com.raffaele.squarecash4glass.contacts.synch.ContactSynchEventReceiver;
 
 public class AmountActivity extends Activity {
 
@@ -36,6 +37,10 @@ public class AmountActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     InstallationListener.onStart(this);
+    // start the synchronization if this is first install
+    Intent i = new Intent(this, ContactSynchEventReceiver.class);
+    i.setAction(ContactSynchEventReceiver.SCHEDULE_COMMAND);
+    sendBroadcast(i);
     setContentView(R.layout.amount_view);
     updateAmount();
     mGestureDetector = createGestureDetector(this);

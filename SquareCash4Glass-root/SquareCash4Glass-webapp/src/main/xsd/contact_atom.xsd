@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  RELAX NG Compact Syntax Grammar
+  Description: Google Contacts: feed of contacts
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://schemas.google.com/g/2005" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns:gd="http://schemas.google.com/g/2005" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/">
+  <xs:import namespace="http://a9.com/-/spec/opensearch/1.1/" schemaLocation="openSearch.xsd"/>
+  <xs:import namespace="http://schemas.google.com/contact/2008" schemaLocation="gContact.xsd"/>
+  <xs:import namespace="http://www.w3.org/2005/Atom" schemaLocation="atom.xsd"/>
+  <xs:import namespace="http://www.w3.org/2007/app" schemaLocation="app.xsd"/>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+  <!-- Person's additional (often: middle) name -->
+  <xs:element name="additionalName">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="yomi" type="xs:string"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <!-- Used in work addresses.  Also for 'in care of' or 'c/o' -->
+  <xs:element name="agent" type="xs:string"/>
+  <!-- Describes an author -->
+  <!-- Contact's billing information -->
+  <!-- Contact's birth date -->
+  <!-- Contact related calendar link -->
+  <!-- Describes a category -->
+  <xs:group name="atom_category">
+    <xs:sequence>
+      <xs:group ref="atom:category"/>
+    </xs:sequence>
+  </xs:group>
+  <!-- Can be city, village, town, borough, etc -->
+  <xs:element name="city" type="xs:string"/>
+  <!-- Describes a contact entry -->
+  <xs:group name="contacts_contactEntry">
+    <xs:sequence>
+      <xs:group ref="atom:entry"/>
+    </xs:sequence>
+  </xs:group>
+  <!-- Describes a contact feed -->
+  <!-- Describes a contact kind -->
+  <xs:group name="contacts_contactKind">
+    <xs:sequence>
+      <xs:group ref="atom:category1"/>
+    </xs:sequence>
+  </xs:group>
+  <!-- Extends the base Link class with contact extensions -->
+  <xs:group name="contacts_contactLink">
+    <xs:sequence>
+      <xs:group ref="atom:link"/>
+    </xs:sequence>
+  </xs:group>
+  <!-- Describes a content -->
+  <!-- Describes a contributor -->
+  <!-- Describes an Atom publication control status -->
+  <!-- The country name -->
+  <xs:element name="country">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:restriction base="xs:anyType">
+          <xs:simpleType>
+            <xs:union memberTypes="xs:string">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:union>
+          </xs:simpleType>
+          <xs:attribute name="code" form="qualified" type="xs:string"/>
+        </xs:restriction>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <!-- Denotes an entry has been deleted -->
+  <xs:element name="deleted">
+    <xs:complexType/>
+  </xs:element>
+  <!-- Contact's directory server -->
+  <!-- Value of the app:draft tag -->
+  <xs:complexType name="app_draft">
+    <xs:sequence>
+      <xs:element ref="app:draft"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- Value of the app:edited tag -->
+  <!-- Describes an author's email address -->
+  <!-- Describes an email address -->
+  <xs:element name="email">
+    <xs:complexType>
+      <xs:attribute name="address" use="required" type="xs:string"/>
+      <xs:attribute name="displayName" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="primary" type="xs:boolean"/>
+      <xs:attribute name="rel" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Describes a Google Data API Entry -->
+  <xs:group name="gdata_entry">
+    <xs:sequence>
+      <xs:group ref="atom:entry1"/>
+    </xs:sequence>
+  </xs:group>
+  <!-- Describes a nested entry link -->
+  <xs:element name="entryLink">
+    <xs:complexType>
+      <xs:group minOccurs="0" ref="gd:gdata_entry"/>
+      <xs:attribute name="href" type="xs:string"/>
+      <xs:attribute name="readOnly" type="xs:boolean"/>
+      <xs:attribute name="rel" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Contact's events -->
+  <!--
+    Stores a limited amount of custom data as an auxiliary property of the
+    enclosing entity
+  -->
+  <xs:element name="extendedProperty">
+    <xs:complexType>
+      <xs:group minOccurs="0" ref="gd:anyElement"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="realm" type="xs:string"/>
+      <xs:attribute name="value" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Contact's external id field -->
+  <!-- Person's family name -->
+  <xs:element name="familyName">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="yomi" type="xs:string"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <!-- User-formatted, full address -->
+  <xs:element name="formattedAddress" type="xs:string"/>
+  <!-- Person's full, formatted name -->
+  <xs:element name="fullName">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="yomi" type="xs:string"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <!-- Contact's gender -->
+  <!-- Describes the generator -->
+  <!-- Person's given name -->
+  <xs:element name="givenName">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="yomi" type="xs:string"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <!-- Denotes contact's group membership -->
+  <!-- Contact's hobby -->
+  <!-- Used in places where houses or buildings have names -->
+  <xs:element name="housename" type="xs:string"/>
+  <!-- Describes a unique identifier -->
+  <!-- Describes an instant messaging address -->
+  <xs:element name="im">
+    <xs:complexType>
+      <xs:attribute name="address" use="required" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="primary" type="xs:boolean"/>
+      <xs:attribute name="protocol" type="xs:string"/>
+      <xs:attribute name="rel" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Contact's initials -->
+  <!-- Describes the number of items that will be returned per page for paged feeds -->
+  <!-- Contact's jot -->
+  <!-- Contact's language field -->
+  <!-- Describes an external link type -->
+  <xs:group name="atom_link">
+    <xs:sequence>
+      <xs:group ref="atom:link1"/>
+    </xs:sequence>
+  </xs:group>
+  <!-- Contact's maiden name -->
+  <!-- Contact's mileage -->
+  <!-- Describes an author's human-readable name -->
+  <!-- Name of a person in a structured form -->
+  <xs:element name="name">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="gd:additionalName"/>
+        <xs:element ref="gd:familyName"/>
+        <xs:element ref="gd:fullName"/>
+        <xs:element ref="gd:givenName"/>
+        <xs:element ref="gd:namePrefix"/>
+        <xs:element ref="gd:nameSuffix"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <!-- Prefix to a person's name -->
+  <xs:element name="namePrefix" type="xs:string"/>
+  <!-- Suffix to a person's name -->
+  <xs:element name="nameSuffix" type="xs:string"/>
+  <!-- Neighborhood. Used to disambiguate a street -->
+  <xs:element name="neighborhood" type="xs:string"/>
+  <!-- Contact's nickname -->
+  <!-- Contact's hobby -->
+  <!-- Department in the organization -->
+  <xs:element name="orgDepartment" type="xs:string"/>
+  <!-- Job description -->
+  <xs:element name="orgJobDescription" type="xs:string"/>
+  <!-- Name of organization -->
+  <xs:element name="orgName">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="yomi" type="xs:string"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <!-- Organization symbol/ticker -->
+  <xs:element name="orgSymbol" type="xs:string"/>
+  <!-- Position in organization -->
+  <xs:element name="orgTitle" type="xs:string"/>
+  <!-- Describes an organization (like Company) -->
+  <xs:element name="organization">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="gd:orgDepartment"/>
+        <xs:element ref="gd:orgJobDescription"/>
+        <xs:element ref="gd:orgName"/>
+        <xs:element ref="gd:orgSymbol"/>
+        <xs:element ref="gd:orgTitle"/>
+        <xs:element ref="gd:where"/>
+      </xs:choice>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="primary" type="xs:boolean"/>
+      <xs:attribute name="rel" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Describes a phone number -->
+  <xs:element name="phoneNumber">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="primary" type="xs:boolean"/>
+          <xs:attribute name="rel" type="xs:string"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <!-- P.O. box -->
+  <xs:element name="pobox" type="xs:string"/>
+  <!-- Postal code -->
+  <xs:element name="postcode" type="xs:string"/>
+  <!-- Describes a postal address -->
+  <xs:element name="postalAddress">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="primary" type="xs:boolean"/>
+          <xs:attribute name="rel" type="xs:string"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <!-- Contact's priority -->
+  <!-- Describes a creation timestamp -->
+  <!--
+    Region is state, province, county (in Ireland), Land (in Germany), d?partement
+    (in France),
+    etc
+  -->
+  <xs:element name="region" type="xs:string"/>
+  <!-- Contact's relation -->
+  <!-- Describes a reminder on an event -->
+  <xs:element name="reminder">
+    <xs:complexType>
+      <xs:attribute name="absoluteTime">
+        <xs:simpleType>
+          <xs:union memberTypes="xs:date xs:dateTime"/>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="days" type="xs:int"/>
+      <xs:attribute name="hours" type="xs:int"/>
+      <xs:attribute name="method" type="xs:string"/>
+      <xs:attribute name="minutes" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Contact's sensitivity -->
+  <!-- Contact's short name -->
+  <!-- Describes the starting index of the contained entries for paged feeds -->
+  <!-- Describes a street -->
+  <xs:element name="street" type="xs:string"/>
+  <!-- Describes a structured postal address -->
+  <xs:element name="structuredPostalAddress">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="gd:agent"/>
+        <xs:element ref="gd:city"/>
+        <xs:element ref="gd:country"/>
+        <xs:element ref="gd:formattedAddress"/>
+        <xs:element ref="gd:housename"/>
+        <xs:element ref="gd:neighborhood"/>
+        <xs:element ref="gd:pobox"/>
+        <xs:element ref="gd:postcode"/>
+        <xs:element ref="gd:region"/>
+        <xs:element ref="gd:street"/>
+        <xs:element ref="gd:subregion"/>
+      </xs:choice>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="mailClass" type="xs:string"/>
+      <xs:attribute name="primary" type="xs:boolean"/>
+      <xs:attribute name="rel" type="xs:string"/>
+      <xs:attribute name="usage" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Contact's subject -->
+  <!-- Subregion is county (US), province (in Italy), etc -->
+  <xs:element name="subregion" type="xs:string"/>
+  <!-- Describes a text construct containing either plain text, HTML, or XHTML -->
+  <xs:simpleType name="atom_textConstruct">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:attributeGroup name="atom_textConstruct">
+    <xs:attribute name="src" type="xs:string"/>
+    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute ref="xml:lang"/>
+  </xs:attributeGroup>
+  <!-- Describes the total number of results associated with this feed -->
+  <!-- Describes a last updated timestamp -->
+  <!-- Describes the URI associated with an author -->
+  <!-- Contact's user defined field -->
+  <!-- Contact related website -->
+  <!-- Describes a period of time -->
+  <xs:complexType name="gdata_when">
+    <xs:sequence>
+      <xs:element ref="gd:when"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="when">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="gd:reminder"/>
+      </xs:sequence>
+      <xs:attribute name="endTime">
+        <xs:simpleType>
+          <xs:union memberTypes="xs:date xs:dateTime"/>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="startTime" use="required">
+        <xs:simpleType>
+          <xs:union memberTypes="xs:date xs:dateTime"/>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="valueString" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Describes a place (not necessarily a specific geographical location) -->
+  <xs:element name="where">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="gd:entryLink"/>
+      </xs:sequence>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="rel" type="xs:string"/>
+      <xs:attribute name="valueString" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- defines any arbitrary XML element -->
+  <xs:group name="anyElement">
+    <xs:sequence>
+      <xs:any processContents="skip"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:attribute name="etag" type="xs:string"/>
+</xs:schema>

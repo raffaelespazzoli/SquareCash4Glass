@@ -59,8 +59,8 @@ public class Oauth2CredentialService {
     LOG.info("uguali? :" + users.get(0).getEmail().equals(email));
     User user = ofy().load().type(User.class).filter("email", email).first().safe();
     LOG.info("loaded user: " + user);
-    StoredCredential contactsCredential = AuthUtil.getCredentialFromStore(user.getId());
-    Oauth2Credential oauth2Credential = new Oauth2Credential(contactsCredential.getAccessToken(), contactsCredential.getRefreshToken(), contactsCredential.getExpirationTimeMilliseconds(), "cp");
+    Credential credential = AuthUtil.getCredentialFromStore(user.getId());
+    Oauth2Credential oauth2Credential = new Oauth2Credential(credential.getAccessToken(), credential.getRefreshToken(), credential.getExpirationTimeMilliseconds(), "cp");
     credentials.add(oauth2Credential);
     // build get token
     // build credentials list

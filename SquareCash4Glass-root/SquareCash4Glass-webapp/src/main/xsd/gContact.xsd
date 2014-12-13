@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://schemas.google.com/contact/2008" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns:gd="http://schemas.google.com/g/2005" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/">
+  <xs:import namespace="http://a9.com/-/spec/opensearch/1.1/" schemaLocation="openSearch.xsd"/>
+  <xs:import namespace="http://schemas.google.com/g/2005" schemaLocation="contact_atom.xsd"/>
+  <xs:import namespace="http://www.w3.org/2005/Atom" schemaLocation="atom.xsd"/>
+  <xs:import namespace="http://www.w3.org/2007/app" schemaLocation="app.xsd"/>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+  <xs:element name="billingInformation">
+    <xs:simpleType>
+      <xs:union memberTypes="xs:string">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:length value="0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:union>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="birthday">
+    <xs:complexType>
+      <xs:attribute name="when" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="calendarLink">
+    <xs:complexType>
+      <xs:attribute name="href" use="required" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="primary" type="xs:boolean"/>
+      <xs:attribute name="rel">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="free-busy"/>
+            <xs:enumeration value="home"/>
+            <xs:enumeration value="work"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="directoryServer">
+    <xs:simpleType>
+      <xs:union memberTypes="xs:string">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:length value="0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:union>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="event">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="gd:gdata_when">
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="rel" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="externalId">
+    <xs:complexType>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="rel" type="xs:string"/>
+      <xs:attribute name="value" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="gender">
+    <xs:complexType>
+      <xs:attribute name="value" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="female"/>
+            <xs:enumeration value="male"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="groupMembershipInfo">
+    <xs:complexType>
+      <xs:attribute name="deleted" type="xs:boolean"/>
+      <xs:attribute name="href" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hobby">
+    <xs:simpleType>
+      <xs:union memberTypes="xs:string">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:length value="0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:union>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="initials" type="xs:string"/>
+  <xs:element name="jot">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:restriction base="xs:anyType">
+          <xs:simpleType>
+            <xs:union memberTypes="xs:string">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:union>
+          </xs:simpleType>
+          <xs:attribute name="rel" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="home"/>
+                <xs:enumeration value="keywords"/>
+                <xs:enumeration value="other"/>
+                <xs:enumeration value="user"/>
+                <xs:enumeration value="work"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:restriction>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="language">
+    <xs:complexType>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute ref="xml:lang"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="maidenName" type="xs:string"/>
+  <xs:element name="mileage">
+    <xs:simpleType>
+      <xs:union memberTypes="xs:string">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:length value="0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:union>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="nickname" type="xs:string"/>
+  <xs:element name="occupation">
+    <xs:simpleType>
+      <xs:union memberTypes="xs:string">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:length value="0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:union>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="priority">
+    <xs:complexType>
+      <xs:attribute name="rel" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="high"/>
+            <xs:enumeration value="low"/>
+            <xs:enumeration value="normal"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="relation">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:restriction base="xs:anyType">
+          <xs:simpleType>
+            <xs:union memberTypes="xs:string">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:union>
+          </xs:simpleType>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="rel">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="assistant"/>
+                <xs:enumeration value="brother"/>
+                <xs:enumeration value="child"/>
+                <xs:enumeration value="domestic-partner"/>
+                <xs:enumeration value="father"/>
+                <xs:enumeration value="friend"/>
+                <xs:enumeration value="manager"/>
+                <xs:enumeration value="mother"/>
+                <xs:enumeration value="parent"/>
+                <xs:enumeration value="partner"/>
+                <xs:enumeration value="referred-by"/>
+                <xs:enumeration value="relative"/>
+                <xs:enumeration value="sister"/>
+                <xs:enumeration value="spouse"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:restriction>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sensitivity">
+    <xs:complexType>
+      <xs:attribute name="rel" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="confidential"/>
+            <xs:enumeration value="normal"/>
+            <xs:enumeration value="personal"/>
+            <xs:enumeration value="private"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="shortName" type="xs:string"/>
+  <xs:element name="subject">
+    <xs:simpleType>
+      <xs:union memberTypes="xs:string">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:length value="0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:union>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="userDefinedField">
+    <xs:complexType>
+      <xs:attribute name="key" use="required" type="xs:string"/>
+      <xs:attribute name="value" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="website">
+    <xs:complexType>
+      <xs:attribute name="href" use="required" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="primary" type="xs:boolean"/>
+      <xs:attribute name="rel">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="blog"/>
+            <xs:enumeration value="ftp"/>
+            <xs:enumeration value="home"/>
+            <xs:enumeration value="home-page"/>
+            <xs:enumeration value="other"/>
+            <xs:enumeration value="profile"/>
+            <xs:enumeration value="work"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

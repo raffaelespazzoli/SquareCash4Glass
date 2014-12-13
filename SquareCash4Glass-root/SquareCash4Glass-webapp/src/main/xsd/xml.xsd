@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.w3.org/XML/1998/namespace" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns:gd="http://schemas.google.com/g/2005" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/">
+  <xs:import namespace="http://a9.com/-/spec/opensearch/1.1/" schemaLocation="openSearch.xsd"/>
+  <xs:import namespace="http://schemas.google.com/contact/2008" schemaLocation="gContact.xsd"/>
+  <xs:import namespace="http://schemas.google.com/g/2005" schemaLocation="contact_atom.xsd"/>
+  <xs:import namespace="http://www.w3.org/2005/Atom" schemaLocation="atom.xsd"/>
+  <xs:import namespace="http://www.w3.org/2007/app" schemaLocation="app.xsd"/>
+  <xs:attribute name="lang" type="xs:string"/>
+</xs:schema>
