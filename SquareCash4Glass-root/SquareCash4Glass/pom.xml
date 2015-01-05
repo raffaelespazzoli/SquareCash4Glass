@@ -31,34 +31,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.api-client</groupId>
-			<artifactId>google-api-client</artifactId>
-			<version>1.18.0-rc</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>xpp3</artifactId>
-					<groupId>xpp3</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>httpclient</artifactId>
-					<groupId>org.apache.httpcomponents</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>junit</artifactId>
-					<groupId>junit</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>android</artifactId>
-					<groupId>com.google.android</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.google.api-client</groupId>
-			<artifactId>google-api-client-android</artifactId>
-			<version>1.18.0-rc</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
 			<version>1.8.1</version>
@@ -110,10 +82,35 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-android</artifactId>
-			<version>1.7.7</version>
+			<groupId>com.noveogroup.android</groupId>
+			<artifactId>android-logger</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>WolframAlpha</groupId>
+			<artifactId>WolframAlpha</artifactId>
+			<version>1.1</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dwolla</groupId>
+			<artifactId>dwolla-java-sdk</artifactId>
+			<version>1.2.0</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -133,9 +130,10 @@
 					</sdk>
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>false</undeployBeforeDeploy>
-					<!-- <dex> -->
-					<!-- <multiDex>true</multiDex> -->
-					<!-- </dex> -->
+					<!-- <proguard> -->
+					<!-- <skip>false</skip> -->
+					<!-- <config>${basedir}/proguard-project.txt</config> -->
+					<!-- </proguard> -->
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>

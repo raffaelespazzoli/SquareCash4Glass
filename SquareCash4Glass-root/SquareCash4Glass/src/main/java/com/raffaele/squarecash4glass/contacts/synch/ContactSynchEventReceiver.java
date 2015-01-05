@@ -18,7 +18,7 @@ public class ContactSynchEventReceiver extends BroadcastReceiver {
   private static final String TAG = "ContactSynchEventReceiver";
   public static final String SCHEDULE_COMMAND = "com.raffaele.squarecash4glass.Schedule";
   public static final String START_COMMAND = "com.raffaele.squarecash4glass.Start";
-  public static final long interval = 1000 * 30;
+  public static final long interval = 1000 * 60 * 60 * 24;
 
   @Override
   public void onReceive(Context context, Intent intent) {

@@ -75,7 +75,7 @@ public class AuthUtil {
   public static Credential getCredentialFromStore(String userId) throws IOException {
     Credential credential=getCredential(userId);
     if (new Date().getTime() > credential.getExpirationTimeMilliseconds()){
-      credential.getRefreshToken();
+      credential.refreshToken();
     }
     return credential;
   }

@@ -23,6 +23,7 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.services.mirror.model.TimelineItem;
 import com.squarecash4glass.util.AuthUtil;
+import com.squarecash4glass.util.DwollaAuthUtil;
 import com.squarecash4glass.dto.User;
 import com.squarecash4glass.rest.data.Oauth2Credential;
 
@@ -60,8 +61,11 @@ public class Oauth2CredentialService {
     User user = ofy().load().type(User.class).filter("email", email).first().safe();
     LOG.info("loaded user: " + user);
     Credential credential = AuthUtil.getCredentialFromStore(user.getId());
+    Credential dwollaCredential = DwollaAuthUtil.getCredentialFromStore(user.getId()+"dwolla");
     Oauth2Credential oauth2Credential = new Oauth2Credential(credential.getAccessToken(), credential.getRefreshToken(), credential.getExpirationTimeMilliseconds(), "cp");
     credentials.add(oauth2Credential);
+    Oauth2Credential dwollaOauth2Credential = new Oauth2Credential(dwollaCredential.getAccessToken(), dwollaCredential.getRefreshToken(), dwollaCredential.getExpirationTimeMilliseconds(), "dwolla");
+    credentials.add(dwollaOauth2Credential);
     // build get token
     // build credentials list
     LOG.info("getCredential terminated correctly, returning...");

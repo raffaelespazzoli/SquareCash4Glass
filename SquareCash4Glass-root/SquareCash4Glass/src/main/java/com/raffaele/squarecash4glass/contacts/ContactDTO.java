@@ -20,11 +20,11 @@ public class ContactDTO extends Model {
   private String lastName;
   
   public List<EmailDTO> getEmails() {
-    return getMany(EmailDTO.class, "contacts");
+    return getMany(EmailDTO.class, "contact");
 }
   
   public List<PhoneNumberDTO> getPhoneNumbers() {
-    return getMany(PhoneNumberDTO.class, "contacts");
+    return getMany(PhoneNumberDTO.class, "contact");
 }
 
   public String getFirstName() {

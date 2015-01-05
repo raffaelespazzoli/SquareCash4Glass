@@ -12,10 +12,10 @@
 		<filter-name>authFilter</filter-name>
 		<url-pattern>*</url-pattern>
 	</filter-mapping>
-	<filter>
-		<filter-name>reauthFilter</filter-name>
-		<filter-class>com.squarecash4glass.servlet.ReauthFilter</filter-class>
-	</filter>
+<!-- 	<filter> -->
+<!-- 		<filter-name>reauthFilter</filter-name> -->
+<!-- 		<filter-class>com.squarecash4glass.servlet.ReauthFilter</filter-class> -->
+<!-- 	</filter> -->
 	<filter>
 		<filter-name>ObjectifyFilter</filter-name>
 		<filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>
@@ -24,10 +24,10 @@
 		<filter-name>ObjectifyFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	<filter-mapping>
-		<filter-name>reauthFilter</filter-name>
-		<url-pattern>*</url-pattern>
-	</filter-mapping>
+<!-- 	<filter-mapping> -->
+<!-- 		<filter-name>reauthFilter</filter-name> -->
+<!-- 		<url-pattern>*</url-pattern> -->
+<!-- 	</filter-mapping> -->
 	<servlet>
 		<servlet-name>main</servlet-name>
 		<servlet-class>com.squarecash4glass.servlet.MainServlet</servlet-class>
@@ -62,6 +62,10 @@
 		<servlet-name>oauth2callbacksquare</servlet-name>
 		<servlet-class>com.squarecash4glass.servlet.SquareAuthServlet</servlet-class>
 	</servlet>
+		<servlet>
+		<servlet-name>oauth2callbackdwolla</servlet-name>
+		<servlet-class>com.squarecash4glass.servlet.DwollaAuthServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>oauth2callback</servlet-name>
 		<url-pattern>/oauth2callback</url-pattern>
@@ -69,6 +73,10 @@
 	<servlet-mapping>
 		<servlet-name>oauth2callbacksquare</servlet-name>
 		<url-pattern>/oauth2callbacksquare</url-pattern>
+	</servlet-mapping>
+		<servlet-mapping>
+		<servlet-name>oauth2callbackdwolla</servlet-name>
+		<url-pattern>/oauth2callbackdwolla</url-pattern>
 	</servlet-mapping>
 	<session-config>
 		<session-timeout>30</session-timeout>

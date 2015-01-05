@@ -50,9 +50,15 @@ public class AuthFilter implements Filter {
       }
 
       // skip auth for static content, middle of auth flow, notify servlet
-      if (httpRequest.getRequestURI().startsWith("/static") || httpRequest.getRequestURI().equals("/oauth2callback") || httpRequest.getRequestURI().equals("/oauth2callbacksquare")
-          || httpRequest.getRequestURI().equals("/favicon.ico") || httpRequest.getRequestURI().equals("/script/jquery-2.1.1.js") || httpRequest.getRequestURI().equals("/SquareAuth.jsp")
-          || httpRequest.getRequestURI().startsWith("/rest") || httpRequest.getRequestURI().contains("/_ah")) {
+      if (httpRequest.getRequestURI().startsWith("/static") 
+          || httpRequest.getRequestURI().equals("/oauth2callback") 
+          || httpRequest.getRequestURI().equals("/oauth2callbacksquare")
+          || httpRequest.getRequestURI().equals("/oauth2callbackdwolla")
+          || httpRequest.getRequestURI().equals("/favicon.ico") 
+          || httpRequest.getRequestURI().equals("/script/jquery-2.1.1.js") 
+          || httpRequest.getRequestURI().equals("/SquareAuth.jsp")
+          || httpRequest.getRequestURI().startsWith("/rest") 
+          || httpRequest.getRequestURI().contains("/_ah")) {
         LOG.info("Skipping auth check for certain urls");
         filterChain.doFilter(request, response);
         return;
@@ -69,17 +75,13 @@ public class AuthFilter implements Filter {
       // TODO check square is authenticated
 
       LOG.info("Checking to see if authorized by square");
-      // if (AuthUtil.getUserId(httpRequest) == null
-      // || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)+"square") ==
-      // null
-      // ||
-      // AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)+"square").getAccessToken()
-      // == null) {
-      // // redirect to auth flow
-      // httpResponse.sendRedirect(WebUtil.buildUrl(httpRequest,
-      // "/oauth2callbacksquare"));
-      // return;
-      // }
+       if (AuthUtil.getUserId(httpRequest) == null
+       || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)+"dwolla") == null
+       || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)+"dwolla").getAccessToken() == null) {
+       // redirect to auth flow
+       httpResponse.sendRedirect(WebUtil.buildUrl(httpRequest,"/oauth2callbackdwolla"));
+       return;
+       }
 
       // Things checked out OK :)
       LOG.info("User logged in, skipping filter");

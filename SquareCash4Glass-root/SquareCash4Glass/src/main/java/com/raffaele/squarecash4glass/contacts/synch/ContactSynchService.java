@@ -94,6 +94,7 @@ public class ContactSynchService extends Service {
       Log.i(TAG, "getting contacts for page: " + page +" and time: "+SimpleDateFormat.getInstance().format(new Date(lastUpdate)));
       contacts = googleContactsUtils.getContacts(contactService, lastUpdate, page, googleContactsUtils.getUserEmail());
       Log.i(TAG, "got contacts for page: " + page);
+      Log.i(TAG, "retrieved contacts: " + contacts);
       googleContactsUtils.saveContacts(contacts.getGoogleContactList(), page);
       Log.i(TAG, "saved contacts for page: " + page);
       page++;

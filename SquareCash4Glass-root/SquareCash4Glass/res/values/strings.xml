@@ -4,21 +4,15 @@
     <string name="app_name">SquareCash4Glass</string>
     <string name="your_payment_request_has_been_accepted_">Your payment request has been accepted.</string>
     <string name="adjust_the_amount_by_tilting_your_head_or_swiping">Adjust the amount by tilting your head or swiping</string>
-    <string name="confirm_the_amount_by_winking_or_tapping">Confirm the amount by winking or tapping</string>
+    <string name="confirm_the_amount_by_winking_or_tapping">Confirm the amount by tapping</string>
     <string name="title_activity_amount">AmountActivity</string>
     <string name="title_contact_amount">ContactActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello">Hello</string>
     <string name="_0_0">$0.0</string>
     <string name="please_select_the_amount_you_want_to_send_">Please select the amount you want to send.</string>
-    <string name="no_contacts">No Contacts Found</string>
-    <string name="search_match_other">Matches Other Field</string>
-    <string name="activity_contacts_list">Contacts List</string>
-    <string name="search_hint">Find contacts</string>
-    <string name="contacts_list_search_results_title">Contacts List Search for \"%s\"</string>
-    <string name="menu_search">Search</string>
-    <string name="menu_add_contact">Add Contact</string>
-    <string name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="title_activity_cvvconfirm">CVVConfirmActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="spell_amount">Spell Amount</string>
+    <string name="spell_pin">Spell Pin</string>
 
 </resources>

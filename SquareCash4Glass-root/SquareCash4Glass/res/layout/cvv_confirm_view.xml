@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Center the CVV code in the frame, swipe left and right to zoom, tap to scan the code, double tap to confirm"
+        android:text="Center the CVV code in the frame, swipe left and right to zoom, tap to scan the code, tap with two fingers to confirm"
         android:textSize="12dp" />
 
 </LinearLayout>

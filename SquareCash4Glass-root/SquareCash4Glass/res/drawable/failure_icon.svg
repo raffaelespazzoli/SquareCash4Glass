@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="240"
+   height="240"
+   viewBox="0 0 240 240"
+   enable-background="new 0 0 100 100"
+   xml:space="preserve"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="failure_icon.svg"
+   inkscape:export-filename="C:\Users\SPAZZRA\Documents\java\git\SquareCash4Glass\SquareCash4Glass-root\SquareCash4Glass\res\drawable\failure_icon_raster3.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"><metadata
+   id="metadata9"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs7" /><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1366"
+   inkscape:window-height="706"
+   id="namedview5"
+   showgrid="false"
+   fit-margin-top="10"
+   fit-margin-left="10"
+   fit-margin-right="10"
+   fit-margin-bottom="10"
+   inkscape:zoom="2.36"
+   inkscape:cx="38.7755"
+   inkscape:cy="174.36922"
+   inkscape:window-x="-8"
+   inkscape:window-y="-8"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Layer_1" />
+<path
+   d="m 222.56295,53.334093 -66.66018,66.663997 66.66018,66.664 c 9.91607,9.91608 9.91607,25.98669 0,35.90277 C 217.60873,227.51907 211.11397,230 204.61921,230 c -6.49859,0 -12.99335,-2.4771 -17.94756,-7.43514 L 120,155.89703 53.332175,222.56486 C 48.377961,227.51907 41.883199,230 35.384616,230 c -6.494762,0 -12.9857,-2.4771 -17.943737,-7.43514 -9.9160749,-9.91225 -9.9160749,-25.98287 0,-35.90277 l 66.656357,-66.664 -66.66018,-66.663997 c -9.9160746,-9.91608 -9.9160746,-25.9867 0,-35.90277 9.912252,-9.9084304 25.975222,-9.9084304 35.891297,0 L 120,84.099149 186.66783,17.431323 c 9.91607,-9.9084304 25.97904,-9.9084304 35.89129,0 9.9199,9.91607 9.9199,25.98669 0.004,35.90277 z"
+   id="path3"
+   inkscape:connector-curvature="0"
+   style="fill:#ffffff" />
+</svg>

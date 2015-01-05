@@ -3,23 +3,20 @@
     package="com.raffaele.squarecash4glass"
     android:versionCode="1"
     android:versionName="1.0" >
-
     <uses-sdk
         android:minSdkVersion="19"
         android:targetSdkVersion="20" />
-
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
+    <uses-permission android:name="com.google.android.glass.permission.DEVELOPMENT" />
     <uses-feature android:name="android.hardware.camera" />
-
     <application
         android:name="com.activeandroid.app.Application"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/square_logo"
         android:label="@string/app_name" >
         <meta-data
             android:name="AA_DB_NAME"
@@ -33,63 +30,28 @@
     			   com.raffaele.squarecash4glass.contacts.ContactDTO,
     			   com.raffaele.squarecash4glass.contacts.PhoneNumberDTO,
     			   com.raffaele.squarecash4glass.contacts.SynchStatusDTO" />
-
         <provider
             android:name="com.activeandroid.content.ContentProvider"
             android:authorities="om.raffaele.squarecash4glass"
             android:exported="false" />
-
         <activity
             android:name=".AmountActivity"
             android:icon="@drawable/square_logo"
             android:immersive="true"
             android:label="@string/title_activity_amount"
-            android:noHistory="true" >
+            android:noHistory="false" >
             <intent-filter>
                 <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
             </intent-filter>
-
             <meta-data
                 android:name="com.google.android.glass.VoiceTrigger"
                 android:resource="@xml/voice_trigger_start" />
         </activity>
         <activity
-            android:name=".ContactActivity"
+            android:name="com.raffaele.squarecash4glass.GoogleContactsActivity"
             android:immersive="true"
             android:label="@string/title_contact_amount"
             android:noHistory="true" >
-        </activity>
-        <activity
-            android:name=".GoogleContactsActivity"
-            android:immersive="true"
-            android:label="@string/title_contact_amount"
-            android:noHistory="true" >
-        </activity>
-        <activity
-            android:name=".ContactsListActivity"
-            android:immersive="true"
-            android:label="@string/activity_contacts_list"
-            android:noHistory="true"
-            android:windowSoftInputMode="adjustResize" >
-
-            <!--
-                      Add intent-filter for search intent action and specify searchable configuration
-                 via meta-data tag. This allows this activity to receive search intents via the
-                 system hooks. In this sample this is only used on older OS versions (pre-Honeycomb)
-                 via the activity search dialog. See the Search API guide for more information:
-                 http://developer.android.com/guide/topics/search/search-dialog.html
-            -->
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable_contacts" />
         </activity>
         <activity
             android:name=".CVVConfirmActivity"
@@ -97,14 +59,24 @@
             android:label="@string/title_activity_cvvconfirm"
             android:noHistory="true" >
         </activity>
-
+        <activity
+            android:name=".PinActivity"
+            android:immersive="true"
+            android:label="PinActivity"
+            android:noHistory="false" >
+        </activity>
+        <activity
+            android:name=".TransactionCompleted"
+            android:immersive="true"
+            android:label="@string/title_activity_cvvconfirm"
+            android:noHistory="true" >
+        </activity>
         <service
             android:name="com.raffaele.squarecash4glass.contacts.synch.ContactSynchService"
-            android:process=":synch_process"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true"
+            android:process=":synch_process" >
         </service>
-
         <receiver
             android:name="com.raffaele.squarecash4glass.contacts.synch.ContactSynchEventReceiver"
             android:enabled="true"
@@ -114,5 +86,4 @@
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>

@@ -25,6 +25,7 @@ package com.raffaele.squarecash4glass;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +34,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
@@ -78,13 +80,16 @@ public class CVVConfirmActivity extends Activity {
 
   // Native camera.
   private Camera mCamera;
+  private boolean cameraAvailable;
 
   // View to display the camera output.
   private CameraPreview mPreview;
+  private View mCameraView;
 
-  protected int maxZoomLevel;
+  private int maxZoomLevel;
 
-  protected int currentZoomLevel;
+  private int currentZoomLevel;
+
 
   /**
    * Default empty constructor.
@@ -100,16 +105,19 @@ public class CVVConfirmActivity extends Activity {
       public boolean onGesture(Gesture gesture) {
         if (gesture == Gesture.TAP) {
           Log.i(TAG, "TAP is detected");
-          if (mCamera != null) {
-            mCamera.takePicture(mShutterCallback, null, mPictureCallback);
+          if (mCamera != null && cameraAvailable) {
+            cameraAvailable=false;            mCamera.takePicture(mShutterCallback, null, mPictureCallback);
           }
           return true;
-        } else if (gesture == Gesture.SWIPE_RIGHT) {
-          currentZoomLevel = Math.max(currentZoomLevel + 1, 0);
+        } else if (gesture == Gesture.TWO_TAP) {
+          doLaunchTransactionCompleted();
+          return true;
+          } else if (gesture == Gesture.SWIPE_RIGHT) {
+          currentZoomLevel = Math.max(currentZoomLevel + 1, 1);
           updateCameraZoom();
           return true;
         } else if (gesture == Gesture.SWIPE_LEFT) {
-          currentZoomLevel = Math.max(currentZoomLevel - 1, 0);
+          currentZoomLevel = Math.max(currentZoomLevel - 1, 1);
           updateCameraZoom();
           return true;
         }
@@ -127,6 +135,13 @@ public class CVVConfirmActivity extends Activity {
       }
     });
     return gestureDetector;
+  }
+  
+  private void doLaunchTransactionCompleted() {
+    // startActivity(new Intent(this,
+    // ContactActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+    startActivity(new Intent(this, TransactionCompleted.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+
   }
 
   class ProcessPictureTask extends AsyncTask<byte[], Void, String> {
@@ -167,28 +182,6 @@ public class CVVConfirmActivity extends Activity {
 
   }
 
-  // private String processPicture(Bitmap bitmap) {
-  // String lang = "eng";
-  // // Make sure this path exist
-  // File dataPathDir = new File(getFilesDir(),
-  // InstallationListener.tesseactDirName);
-  // // String DATA_PATH = this.getDir(dataPathDir.getAbsolutePath(),
-  // // Context.MODE_PRIVATE).getAbsolutePath()+"/";
-  // TessBaseAPI baseApi = new TessBaseAPI();
-  // baseApi.setDebug(true);
-  // baseApi.init(dataPathDir.getAbsolutePath(), lang);
-  // baseApi.setImage(bitmap);
-  // String recognizedText = baseApi.getUTF8Text();
-  // Log.i(TAG, "recognizedText: " + recognizedText);
-  // Matcher CVVMatcher = CVVPattern.matcher(recognizedText);
-  // // we print the first occurrence if it exists
-  // String result=null;
-  // if (CVVMatcher.find()) {
-  // result=CVVMatcher.group();
-  // }
-  // Log.i(TAG, "processPicture() completed, result: "+result);
-  // return result;
-  // }
 
   /*
    * Send generic motion events to the gesture detector
@@ -203,9 +196,9 @@ public class CVVConfirmActivity extends Activity {
 
   public void onResume() {
     super.onResume();
-    View view = findViewById(R.id.container);
+    
     // Create our Preview view and set it as the content of our activity.
-    boolean opened = safeCameraOpenInView(view);
+    boolean opened = safeCameraOpenInView(mCameraView);
 
     if (opened == false) {
       Log.d("CameraGuide", "Error, Camera failed to open");
@@ -228,6 +221,7 @@ public class CVVConfirmActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.cvv_confirm_view);
+    mCameraView = findViewById(R.id.camera_preview);
     mGestureDetector = createGestureDetector(this);
     Log.i(TAG, "onCreate completed.");
 
@@ -253,7 +247,7 @@ public class CVVConfirmActivity extends Activity {
       Log.i(TAG, "camera parameters:" + mCamera.getParameters());
       Log.i(TAG, "camera current size:" + ToStringBuilder.reflectionToString(mCamera.getParameters().getPictureSize()));
       Log.i(TAG, "camera supported sizes:" + ToStringBuilder.reflectionToString(mCamera.getParameters().getSupportedPictureSizes().toArray(), new RecursiveToStringStyle()));
-
+      cameraAvailable=true;
     }
     Log.i(TAG, "safeCameraOpenInView completed.");
     return qOpened;
@@ -284,7 +278,7 @@ public class CVVConfirmActivity extends Activity {
   @Override
   public void onDestroy() {
     super.onDestroy();
-
+    
     Log.i(TAG, "onDestroy completed.");
   }
 
@@ -370,7 +364,7 @@ public class CVVConfirmActivity extends Activity {
       mHolder.addCallback(this);
       mHolder.setKeepScreenOn(true);
       // deprecated setting, but required on Android versions prior to 3.0
-      mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+      //mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
       Log.i(TAG, "CameraPreview() completed.");
     }
 
@@ -459,14 +453,12 @@ public class CVVConfirmActivity extends Activity {
         Camera.Parameters parameters = mCamera.getParameters();
 
         // Set the auto-focus mode to "continuous"
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_MACRO);
-
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY);
         // Preview size must exist.
         if (mPreviewSize != null) {
           Camera.Size previewSize = mPreviewSize;
           parameters.setPreviewSize(previewSize.width, previewSize.height);
         }
-
         mCamera.setParameters(parameters);
         mCamera.startPreview();
       } catch (Exception e) {
@@ -607,6 +599,8 @@ public class CVVConfirmActivity extends Activity {
     public void onPictureTaken(byte[] data, Camera camera) {
       new ProcessPictureTask().execute(data);
       mCamera.startPreview();
+      //safeCameraOpenInView(mCameraView);
+      cameraAvailable=true;
       Log.i(TAG, "onPictureTaken() completed.");
     }
   };

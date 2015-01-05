@@ -86,15 +86,24 @@ public class GoogleContactsUtils {
             for (Object nameattribute : name.getAdditionalNameOrFamilyNameOrFullName()) {
               if (nameattribute instanceof GivenName) {
                 GivenName givenName = (GivenName) nameattribute;
-                googleContact.setFirstName(givenName.getValue());
+                String value = givenName.getValue();
+                if (value != null && !"".equals(value) && !"null".equals(value)) {
+                  googleContact.setFirstName(value);
+                }
               }
               if (nameattribute instanceof FamilyName) {
                 FamilyName lastName = (FamilyName) nameattribute;
-                googleContact.setLastName(lastName.getValue());
+                String value = lastName.getValue();
+                if (value != null && !"".equals(value) && !"null".equals(value)) {
+                  googleContact.setLastName(value);
+                }
               }
               if (nameattribute instanceof FullName) {
                 FullName fullName = (FullName) nameattribute;
-                fullNameString = fullName.getValue();
+                String value = fullName.getValue();
+                if (value != null && !"".equals(value) && !"null".equals(value)) {
+                  fullNameString = value;
+                }
               }
             }
             if (googleContact.getFirstName() == null && fullNameString != null) {

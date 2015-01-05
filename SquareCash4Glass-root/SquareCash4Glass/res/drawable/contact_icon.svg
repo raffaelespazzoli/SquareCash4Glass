@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="240"
+   height="240"
+   viewBox="0 0 240 240"
+   enable-background="new 0 0 512 512"
+   xml:space="preserve"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="contact_icon.svg"
+   inkscape:export-filename="C:\Users\SPAZZRA\Documents\java\git\SquareCash4Glass\SquareCash4Glass-root\SquareCash4Glass\res\drawable\contact_icon_raster3.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"><metadata
+   id="metadata9"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs7" /><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1366"
+   inkscape:window-height="706"
+   id="namedview5"
+   showgrid="false"
+   inkscape:zoom="0.65186406"
+   inkscape:cx="352.51287"
+   inkscape:cy="224.18752"
+   inkscape:window-x="-8"
+   inkscape:window-y="-8"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Layer_1" />
+<path
+   d="m 188.75088,161.25009 h -13.75007 c -15.18695,0 -27.50013,-12.31318 -27.50013,-27.50013 v -8.83571 c 6.08269,-7.23082 10.44705,-15.78421 13.15924,-24.82145 0.28187,-1.52412 1.74583,-2.27607 2.72594,-3.32322 5.26371,-5.263699 6.29754,-14.146243 2.34999,-20.470845 -0.53712,-0.959926 -1.50392,-1.792665 -1.45021,-2.981186 0,-8.063555 0.0404,-16.140431 -0.0133,-24.197111 -0.21484,-9.728603 -2.99451,-19.846504 -9.81583,-27.050251 -5.50561,-5.821005 -13.06514,-9.285163 -20.86701,-10.76931 -9.85622,-1.879893 -20.16878,-1.78579 -29.93047,0.698245 -8.459724,2.135127 -16.408982,7.089879 -21.323342,14.434993 -4.350607,6.384757 -6.25757,14.139366 -6.579838,21.780107 -0.120743,8.204493 -0.02707,16.428753 -0.05371,24.653442 0.188204,1.644852 -1.208717,2.759467 -1.839501,4.122442 -3.719395,6.747416 -2.081417,15.938906 3.894276,20.846824 1.517234,1.04758 1.799541,2.95412 2.349972,4.59896 2.605209,8.12372 6.928745,15.63684 12.393968,22.18273 v 9.1309 c 0,15.18695 -12.313185,27.50014 -27.500135,27.50014 H 51.250203 c 0,0 -24.921998,6.87504 -41.250203,41.2502 v 13.75007 C 10,223.85028 16.150148,230 23.750068,230 H 216.25101 c 7.60036,0 13.75007,-6.15014 13.75007,-13.75007 v -13.75007 c -16.3282,-34.37473 -41.2502,-41.24977 -41.2502,-41.24977 z"
+   id="path3"
+   inkscape:connector-curvature="0"
+   style="fill:#ffffff" />
+</svg>
