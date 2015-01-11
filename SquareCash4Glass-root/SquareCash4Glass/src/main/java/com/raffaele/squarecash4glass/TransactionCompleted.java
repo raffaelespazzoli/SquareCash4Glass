@@ -1,14 +1,14 @@
 package com.raffaele.squarecash4glass;
 
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import retrofit.RestAdapter;
+import retrofit.client.Response;
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,8 +24,11 @@ import com.google.android.glass.widget.Slider;
 import com.google.gson.Gson;
 import com.raffaele.squarecash4glass.contacts.GoogleContactsUtils;
 import com.raffaele.squarecash4glass.payment.PaymentBean;
-import com.raffaele.squarecash4glass.rest.GoogleContactsService;
+import com.raffaele.squarecash4glass.payment.PaymentBean.ContactType;
+import com.raffaele.squarecash4glass.payment.PaymentBean.PaymentProvider;
 import com.raffaele.squarecash4glass.rest.Oauth2CredentialService;
+import com.raffaele.squarecash4glass.rest.PreferencesService;
+import com.raffaele.squarecash4glass.rest.VenmoService;
 import com.squarecash4glass.rest.data.Oauth2Credential;
 
 public class TransactionCompleted extends Activity implements OnClickListener {
@@ -34,9 +37,14 @@ public class TransactionCompleted extends Activity implements OnClickListener {
 
   private PaymentBean paymentInfo;
 
-  private final static String prodURL = "https://www.dwolla.com/oauth/rest";
-  private final static String sandboxURL = "https://uat.dwolla.com/oauth/rest";
+  private final static String dwollaProdURL = "https://www.dwolla.com/oauth/rest";
+  private final static String dwollaSandboxURL = "https://uat.dwolla.com/oauth/rest";
 
+  private final static String venmoProdURL = "https://api.venmo.com/v1";
+  private final static String venmoSandboxURL = "https://sandbox-api.venmo.com/v1";
+  
+  private final static DecimalFormat venmoAmountFormat=new DecimalFormat("#####.00");
+  
   private Slider.Indeterminate mIndeterminate;
   private Slider mSlider;
   
@@ -102,6 +110,30 @@ public class TransactionCompleted extends Activity implements OnClickListener {
 
   protected boolean processPaymentRequest() throws IOException {
     // TODO Auto-generated method stub
+    if (PaymentProvider.DWOLLA.equals(paymentInfo.getPaymentProvider())){
+      return processDwollaPayment();
+    }
+    if (PaymentProvider.VENMO.equals(paymentInfo.getPaymentProvider())){
+      return processVenmoPayment();
+    }
+    return false;
+  }
+
+  private boolean processVenmoPayment() throws IOException {
+    String oauth_token = getVenmoOauthToken();
+    VenmoService venmoService=createVenmoService();
+    Response response=venmoService.makePayment(oauth_token, ContactType.PHONE_NUMBER.equals(paymentInfo.getContactType())?paymentInfo.getContactInfo():null, 
+        ContactType.EMAIL.equals(paymentInfo.getContactType())?paymentInfo.getContactInfo():null, 
+            null, "payment done with google glass", venmoAmountFormat.format(paymentInfo.getAmount()), "public");
+    Log.i(TAG, "venmo response " + response);
+    return response.getStatus()==200;
+  }
+
+  /**
+   * @return
+   * @throws IOException
+   */
+  private boolean processDwollaPayment() throws IOException {
     String oauth_token = getDwollaOauthToken();
     SendRequest sendRequest = new SendRequest(oauth_token, paymentInfo.getAuthCode(), paymentInfo.getContactInfo(), paymentInfo.getAmount().doubleValue());
     Log.i(TAG, "send request " + ToStringBuilder.reflectionToString(sendRequest));
@@ -115,9 +147,15 @@ public class TransactionCompleted extends Activity implements OnClickListener {
    * @return
    */
   private DwollaServiceSync createDwollaService() {
-    RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(sandboxURL).build();
+    RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(dwollaSandboxURL).build();
     DwollaServiceSync dwollaService = restAdapter.create(DwollaServiceSync.class);
     return dwollaService;
+  }
+  
+  private VenmoService createVenmoService() {
+    RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(venmoSandboxURL).build();
+    VenmoService venmoService = restAdapter.create(VenmoService.class);
+    return venmoService;
   }
 
   private CardBuilder getSuccessCard() {
@@ -157,6 +195,18 @@ public class TransactionCompleted extends Activity implements OnClickListener {
     List<Oauth2Credential> credentials = oauth2CredentialService.getCredentials(userEmail);
     for (Oauth2Credential credential : credentials) {
       if ("dwolla".equals(credential.getType())) {
+        return credential.getToken();
+      }
+    }
+    return null;
+  }
+  
+  private String getVenmoOauthToken() throws IOException {
+    Oauth2CredentialService oauth2CredentialService = createOauth2CredentialService();
+    String userEmail = new GoogleContactsUtils(this).getUserEmail();
+    List<Oauth2Credential> credentials = oauth2CredentialService.getCredentials(userEmail);
+    for (Oauth2Credential credential : credentials) {
+      if ("venmo".equals(credential.getType())) {
         return credential.getToken();
       }
     }

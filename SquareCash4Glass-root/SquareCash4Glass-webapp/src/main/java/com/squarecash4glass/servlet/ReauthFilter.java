@@ -15,8 +15,6 @@
  */
 package com.squarecash4glass.servlet;
 
-import com.google.api.client.auth.oauth2.TokenResponseException;
-
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -28,6 +26,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.api.client.auth.oauth2.TokenResponseException;
 
 /**
  * A filter which reacts to invalid grant_auth exceptions, typically caused when

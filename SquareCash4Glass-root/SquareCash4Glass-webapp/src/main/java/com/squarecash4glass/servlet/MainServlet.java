@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.configuration.ConfigurationException;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -43,9 +45,9 @@ import com.google.api.services.mirror.model.AuthToken;
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.model.Person;
 import com.google.common.collect.Lists;
-import com.googlecode.objectify.ObjectifyService;
 import com.squarecash4glass.dto.User;
-import com.squarecash4glass.util.AuthUtil;
+import com.squarecash4glass.util.OAuth2Util;
+import com.squarecash4glass.util.Oauth2Factory;
 
 /**
  * Handles POST requests from index.jsp
@@ -142,9 +144,18 @@ public class MainServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
     // TODO get Token
-    Credential credential = AuthUtil.getCredential(req);
+    OAuth2Util oAuth2Util=null;
+    try {
+      oAuth2Util=Oauth2Factory.getOauth2Util("google", "sandbox");
+    } catch (ConfigurationException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      throw new IOException(e);
+    }
+    String userid = oAuth2Util.getUserId(req);
+    Credential credential = oAuth2Util.getCredentialFromStore(userid);
     String userEmail = getUserEmail(credential);
-    String userid = AuthUtil.getUserId(req);
+    
 
     storeUserInfo(userid, userEmail);
     pushTokensToGlass(userEmail, credential, (String) req.getSession().getAttribute("authToken"));

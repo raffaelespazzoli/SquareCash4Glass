@@ -3,7 +3,6 @@
  */
 package com.raffaele.squarecash4glass.payment;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -25,7 +24,7 @@ public class PaymentBean implements Parcelable {
   }
 
   static public enum PaymentProvider {
-    SQUARE, DWOLLA;
+    SQUARE, DWOLLA, VENMO;
   }
 
   private ContactType contactType;
@@ -38,7 +37,7 @@ public class PaymentBean implements Parcelable {
   // this represent PIN or CVV or any additional credential needed to complete
   // the payment.
   private String authCode;
-
+  
   /**
    * @return the contactType
    */

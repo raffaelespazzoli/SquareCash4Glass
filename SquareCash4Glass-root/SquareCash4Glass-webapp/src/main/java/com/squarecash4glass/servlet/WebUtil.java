@@ -15,10 +15,10 @@
  */
 package com.squarecash4glass.servlet;
 
-import com.google.api.client.http.GenericUrl;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.google.api.client.http.GenericUrl;
 
 /**
  * @author Jenny Murphy - http://google.com/+JennyMurphy

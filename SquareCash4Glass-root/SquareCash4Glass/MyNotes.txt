@@ -3,3 +3,8 @@ http://ideanotion.net/google-glass-ocr-eclipse-tutorial/
 
 tesserat fine tuning parameters
 http://www.sk-spell.sk.cx/tesseract-ocr-parameters-in-302-version
+
+add modularized support for a payment provider -- ok
+it only lacks the choice of the provider in the web page
+rename the project
+add support for venmo ok.

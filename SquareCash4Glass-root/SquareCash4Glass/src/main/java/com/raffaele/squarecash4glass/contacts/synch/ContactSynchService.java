@@ -3,9 +3,7 @@ package com.raffaele.squarecash4glass.contacts.synch;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -18,7 +16,6 @@ import android.util.Log;
 
 import com.raffaele.squarecash4glass.contacts.GoogleContactsUtils;
 import com.raffaele.squarecash4glass.rest.GoogleContactsService;
-import com.squarecash4glass.rest.data.GoogleContact;
 import com.squarecash4glass.rest.data.GoogleContactResult;
 
 public class ContactSynchService extends Service {

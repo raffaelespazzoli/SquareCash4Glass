@@ -1,8 +1,8 @@
 package com.raffaele.squarecash4glass.tests;
 
-import com.raffaele.squarecash4glass.contacts.synch.ContactSynchService;
-
 import android.test.ServiceTestCase;
+
+import com.raffaele.squarecash4glass.contacts.synch.ContactSynchService;
 
 public class SynchContactServiceTest extends ServiceTestCase<ContactSynchService> {
 

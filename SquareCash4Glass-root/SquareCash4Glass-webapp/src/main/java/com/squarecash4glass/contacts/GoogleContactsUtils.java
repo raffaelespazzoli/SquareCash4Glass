@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.w3._2005.atom.Feed;
 import org.w3._2005.atom.Feed.Entry;
 
@@ -29,7 +30,7 @@ import com.squarecash4glass.dto.User;
 import com.squarecash4glass.rest.GoogleContactAPIClient;
 import com.squarecash4glass.rest.data.GoogleContact;
 import com.squarecash4glass.rest.data.GoogleContactResult;
-import com.squarecash4glass.util.AuthUtil;
+import com.squarecash4glass.util.Oauth2Factory;
 
 public class GoogleContactsUtils {
   private static final Logger LOG = Logger.getLogger(GoogleContactsUtils.class.getSimpleName());
@@ -38,14 +39,14 @@ public class GoogleContactsUtils {
   private static final String ACCOUNTS_TYPE = "com.google";
   private static final DateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmssZ", Locale.US);
 
-  public static Credential getCredential(String email) throws IOException {
+  public static Credential getCredential(String email) throws IOException, ConfigurationException {
 
-    List<User> users = ofy().load().type(User.class).list();
-    LOG.info("loaded users: " + users);
-    LOG.info("uguali? :" + users.get(0).getEmail().equals(email));
+    //List<User> users = ofy().load().type(User.class).list();
+    //LOG.info("loaded users: " + users);
+    //LOG.info("uguali? :" + users.get(0).getEmail().equals(email));
     User user = ofy().load().type(User.class).filter("email", email).first().safe();
     LOG.info("loaded user: " + user);
-    Credential credential = AuthUtil.getCredentialFromStore(user.getId());
+    Credential credential = Oauth2Factory.getOauth2Util("google", "sandbox").getCredentialFromStore(user.getId());
     return credential;
 
   }

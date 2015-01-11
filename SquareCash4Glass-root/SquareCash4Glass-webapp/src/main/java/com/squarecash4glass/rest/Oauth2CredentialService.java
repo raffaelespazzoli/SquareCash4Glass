@@ -1,5 +1,7 @@
 package com.squarecash4glass.rest;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,25 +11,19 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+
+import org.apache.commons.configuration.ConfigurationException;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.oauth2.StoredCredential;
-import com.google.api.services.mirror.model.TimelineItem;
-import com.squarecash4glass.util.AuthUtil;
-import com.squarecash4glass.util.DwollaAuthUtil;
 import com.squarecash4glass.dto.User;
 import com.squarecash4glass.rest.data.Oauth2Credential;
-
-import static com.googlecode.objectify.ObjectifyService.ofy;
+import com.squarecash4glass.util.Oauth2Factory;
 
 @Path("/oauth2credential")
 public class Oauth2CredentialService {
@@ -47,12 +43,13 @@ public class Oauth2CredentialService {
    * @return
    * @throws IOException
    * @throws ServletException
+   * @throws ConfigurationException 
    */
   @GET
   // @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/credential/{email}")
-  public List<Oauth2Credential> getCredential(@PathParam(value = "email") String email) throws IOException, ServletException {
+  public List<Oauth2Credential> getCredential(@PathParam(value = "email") String email) throws IOException, ServletException, ConfigurationException {
     LOG.info("getCredential called with: " + email);
     List<Oauth2Credential> credentials = new ArrayList<Oauth2Credential>();
     List<User> users = ofy().load().type(User.class).list();
@@ -60,8 +57,8 @@ public class Oauth2CredentialService {
     LOG.info("uguali? :" + users.get(0).getEmail().equals(email));
     User user = ofy().load().type(User.class).filter("email", email).first().safe();
     LOG.info("loaded user: " + user);
-    Credential credential = AuthUtil.getCredentialFromStore(user.getId());
-    Credential dwollaCredential = DwollaAuthUtil.getCredentialFromStore(user.getId()+"dwolla");
+    Credential credential = Oauth2Factory.getOauth2Util("google", "sandbox").getCredentialFromStore(user.getId());
+    Credential dwollaCredential = Oauth2Factory.getOauth2Util("dwolla", "sandbox").getCredentialFromStore(user.getId()+"dwolla");
     Oauth2Credential oauth2Credential = new Oauth2Credential(credential.getAccessToken(), credential.getRefreshToken(), credential.getExpirationTimeMilliseconds(), "cp");
     credentials.add(oauth2Credential);
     Oauth2Credential dwollaOauth2Credential = new Oauth2Credential(dwollaCredential.getAccessToken(), dwollaCredential.getRefreshToken(), dwollaCredential.getExpirationTimeMilliseconds(), "dwolla");

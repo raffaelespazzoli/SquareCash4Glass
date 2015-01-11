@@ -22,10 +22,9 @@ import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.raffaele.squarecash4glass.rest.GoogleContactsService;
-import com.raffaele.squarecash4glass.rest.Oauth2CredentialService;
+import com.raffaele.squarecash4glass.rest.PreferencesService;
 import com.squarecash4glass.rest.data.GoogleContact;
 import com.squarecash4glass.rest.data.GoogleContactResult;
-import com.squarecash4glass.rest.data.Oauth2Credential;
 
 public class GoogleContactsUtils {
   Logger logger = LoggerFactory.getLogger(GoogleContactsUtils.class);
@@ -91,6 +90,12 @@ public class GoogleContactsUtils {
     RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("https://squarecash4glass.appspot.com").build();
     GoogleContactsService contactService = restAdapter.create(GoogleContactsService.class);
     return contactService;
+  }
+  
+  public PreferencesService createPreferencesService() throws IOException {
+    RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("https://squarecash4glass.appspot.com").build();
+    PreferencesService preferencesService = restAdapter.create(PreferencesService.class);
+    return preferencesService;
   }
 
   // public void getContacts(ContactEntry entry) throws ServiceException,

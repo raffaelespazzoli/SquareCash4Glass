@@ -1,13 +1,10 @@
 package com.raffaele.squarecash4glass.rest;
 
-import java.util.List;
-
-import com.squarecash4glass.rest.data.GoogleContact;
-import com.squarecash4glass.rest.data.GoogleContactResult;
-
 import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
+
+import com.squarecash4glass.rest.data.GoogleContactResult;
 
 public interface GoogleContactsService {
 

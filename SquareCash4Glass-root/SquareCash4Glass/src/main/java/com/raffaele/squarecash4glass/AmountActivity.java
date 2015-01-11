@@ -1,8 +1,10 @@
 package com.raffaele.squarecash4glass;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,8 +32,11 @@ import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.view.WindowUtils;
 import com.google.android.glass.widget.Slider;
+import com.raffaele.squarecash4glass.contacts.GoogleContactsUtils;
 import com.raffaele.squarecash4glass.contacts.synch.ContactSynchEventReceiver;
 import com.raffaele.squarecash4glass.payment.PaymentBean;
+import com.raffaele.squarecash4glass.payment.PaymentBean.PaymentProvider;
+import com.raffaele.squarecash4glass.rest.PreferencesService;
 import com.wolfram.alpha.WAEngine;
 import com.wolfram.alpha.WAPlainText;
 import com.wolfram.alpha.WAPod;
@@ -64,6 +69,8 @@ public class AmountActivity extends Activity {
   private Slider.Indeterminate mIndeterminate;
   private Slider mSlider;
   
+  private PaymentBean paymentInfo=new PaymentBean();
+  
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -81,8 +88,44 @@ public class AmountActivity extends Activity {
     setContentView(R.layout.amount_view);
  // Set the view for the Slider
     mSlider = Slider.from(findViewById(R.id.textAmountInstruction3));
-    updateAmount();
+    updateAmount();   
+    getUserPreferences();
     Log.i(TAG, "onCreate completed.");
+  }
+
+  /**
+   * 
+   */
+  private void getUserPreferences() {
+    new AsyncTask<Void, Void, Void>() {
+      @Override
+      protected Void doInBackground(Void...voids) {
+        GoogleContactsUtils googleContactsUtils=new GoogleContactsUtils(AmountActivity.this);
+        String email=googleContactsUtils.getUserEmail();
+        PreferencesService preferencesService;
+        try {
+          preferencesService = googleContactsUtils.createPreferencesService();
+          Map<String,String> preferences=preferencesService.getPreferences(email);
+          String provider=preferences.get("provider");
+          if ("dwolla".equals(provider)){
+            paymentInfo.setPaymentProvider(PaymentProvider.DWOLLA);
+          }
+          if ("venmo".equals(provider)){
+            paymentInfo.setPaymentProvider(PaymentProvider.VENMO);
+          }
+          if ("square".equals(provider)){
+            paymentInfo.setPaymentProvider(PaymentProvider.SQUARE);
+          }
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+          //for now default provider is dwolla
+          paymentInfo.setPaymentProvider(PaymentProvider.DWOLLA);
+        }
+        return null;
+      }
+
+    }.execute();
   }
 
   @Override
@@ -262,7 +305,6 @@ public class AmountActivity extends Activity {
   }
 
   private void doLaunchGoogleContactsActivity() {
-    PaymentBean paymentInfo=new PaymentBean();
     paymentInfo.setAmount(mAmount);
     Intent i=new Intent(this, GoogleContactsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     i.putExtra(PaymentBean.label, paymentInfo);

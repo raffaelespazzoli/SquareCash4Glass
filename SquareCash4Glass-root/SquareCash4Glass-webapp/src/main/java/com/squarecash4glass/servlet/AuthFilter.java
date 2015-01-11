@@ -27,9 +27,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.configuration.ConfigurationException;
+
 import com.googlecode.objectify.ObjectifyService;
 import com.squarecash4glass.dto.User;
-import com.squarecash4glass.util.AuthUtil;
+import com.squarecash4glass.util.OAuth2Util;
+import com.squarecash4glass.util.Oauth2Factory;
 
 /**
  * A filter which ensures that prevents unauthenticated users from accessing the
@@ -54,6 +57,7 @@ public class AuthFilter implements Filter {
           || httpRequest.getRequestURI().equals("/oauth2callback") 
           || httpRequest.getRequestURI().equals("/oauth2callbacksquare")
           || httpRequest.getRequestURI().equals("/oauth2callbackdwolla")
+          || httpRequest.getRequestURI().equals("/oauth2callbackvenmo")
           || httpRequest.getRequestURI().equals("/favicon.ico") 
           || httpRequest.getRequestURI().equals("/script/jquery-2.1.1.js") 
           || httpRequest.getRequestURI().equals("/SquareAuth.jsp")
@@ -65,23 +69,44 @@ public class AuthFilter implements Filter {
       }
 
       LOG.info("Checking to see if authorized by google");
-      if (AuthUtil.getUserId(httpRequest) == null || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)) == null
-          || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)).getAccessToken() == null) {
+      // TODO get Token
+      OAuth2Util oAuth2Utilgoogle=null;
+      try {
+        oAuth2Utilgoogle=Oauth2Factory.getOauth2Util("google", "sandbox");
+      } catch (ConfigurationException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        throw new IOException(e);
+      }
+      String userid=oAuth2Utilgoogle.getUserId(httpRequest);
+      if (userid == null || oAuth2Utilgoogle.getCredentialFromStore((userid)) == null
+          || oAuth2Utilgoogle.getCredentialFromStore(userid).getAccessToken() == null) {
         // redirect to auth flow
         httpResponse.sendRedirect(WebUtil.buildUrl(httpRequest, "/oauth2callback"));
         return;
       }
 
-      // TODO check square is authenticated
+      // check dwolla is authenticated
 
-      LOG.info("Checking to see if authorized by square");
-       if (AuthUtil.getUserId(httpRequest) == null
-       || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)+"dwolla") == null
-       || AuthUtil.getCredential(AuthUtil.getUserId(httpRequest)+"dwolla").getAccessToken() == null) {
+      LOG.info("Checking to see if authorized by dwolla");
+       if (userid == null
+       || oAuth2Utilgoogle.getCredentialFromStore(userid+"dwolla") == null
+       || oAuth2Utilgoogle.getCredentialFromStore(userid+"dwolla").getAccessToken() == null) {
        // redirect to auth flow
        httpResponse.sendRedirect(WebUtil.buildUrl(httpRequest,"/oauth2callbackdwolla"));
        return;
        }
+       
+       // check dwolla is authenticated
+
+       LOG.info("Checking to see if authorized by venmo");
+        if (userid == null
+        || oAuth2Utilgoogle.getCredentialFromStore(userid+"venmo") == null
+        || oAuth2Utilgoogle.getCredentialFromStore(userid+"venmo").getAccessToken() == null) {
+        // redirect to auth flow
+        httpResponse.sendRedirect(WebUtil.buildUrl(httpRequest,"/oauth2callbackvenmo"));
+        return;
+        }
 
       // Things checked out OK :)
       LOG.info("User logged in, skipping filter");
